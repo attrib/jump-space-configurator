@@ -1,0 +1,116 @@
+{
+  "parts": [
+    {
+      "id": "p1",
+      "name": "Engine 1x2",
+      "type": "Engines",
+      "shape": [
+        "XX"
+      ]
+    },
+    {
+      "id": "p2",
+      "name": "L-shape",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XXX",
+        "  X"
+      ]
+    },
+    {
+      "id": "p3",
+      "name": "U-shape",
+      "type": "Sensors",
+      "shape": [
+        "X X",
+        "X X",
+        "XXX"
+      ]
+    },
+    {
+      "id": "p4",
+      "name": "Tall 1x3",
+      "type": "Pilot Canons",
+      "shape": [
+        "XXX"
+      ]
+    },
+    {
+      "id": "p5",
+      "name": "Special Spike",
+      "type": "Special Weapons",
+      "shape": [
+        "X X",
+        " X "
+      ]
+    }
+  ],
+  "reactors": [
+    {
+      "id": "r1",
+      "name": "Reactor A",
+      "shape": [
+        " UU  UU ",
+        " UU  UU ",
+        " UU  UU ",
+        " PUUUUP "
+      ]
+    },
+    {
+      "id": "r2",
+      "name": "Reactor B",
+      "shape": [
+        "  UUUU  ",
+        "  UUUU  ",
+        "  UUUU  ",
+        "  UUUU  "
+      ]
+    },
+    {
+      "id": "r3",
+      "name": "Reactor C",
+      "shape": [
+        " UUU U  ",
+        " UUU U  ",
+        " UUU U  ",
+        " UUU U  "
+      ]
+    },
+    {
+      "id": "r4",
+      "name": "Reactor D",
+      "shape": [
+        " U  UU ",
+        "  U  UU ",
+        "U  UU  ",
+        " U  UU "
+      ]
+    }
+  ],
+  "auxiliaries": [
+    {
+      "id": "a1",
+      "name": "Aux X",
+      "shape": [
+        " UU  UU ",
+        " UU  UU "
+      ]
+    },
+    {
+      "id": "a2",
+      "name": "Aux Y",
+      "shape": [
+        " UUUUUU ",
+        "        "
+      ]
+    },
+    {
+      "id": "a3",
+      "name": "Aux Z",
+      "shape": [
+        "   UUUU ",
+        "        "
+      ]
+    }
+  ]
+}
