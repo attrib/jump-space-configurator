@@ -107,13 +107,33 @@
       ]
     },
     {
-      "id": "r3",
-      "name": "Reactor C",
+      "id": "materia_scatter_reactor_t1",
+      "name": "Materia Scatter Reactor T1",
       "shape": [
-        " UUU U  ",
-        " UUU U  ",
-        " UUU U  ",
-        " UUU U  "
+        "UUUUUUUU",
+        " U UU U ",
+        "UUUUUUUU",
+        "P P  P P"
+      ]
+    },
+    {
+      "id": "materia_scatter_reactor_t2",
+      "name": "Materia Scatter Reactor T2",
+      "shape": [
+        "UUUUUUUU",
+        " U UU U ",
+        "UPPUUPPU",
+        "P P  P P"
+      ]
+    },
+    {
+      "id": "materia_scatter_reactor_t3",
+      "name": "Materia Scatter Reactor T3",
+      "shape": [
+        "UUUUUUUU",
+        " P UU P ",
+        "PPPPPPPP",
+        "P P  P P"
       ]
     },
     {
