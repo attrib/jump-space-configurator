@@ -87,8 +87,8 @@
       ]
     },
      {
-      "id": "solid_state_reactor_t1",
-      "name": "Solid State Reactor T1",
+      "id": "solid_state_reactor_t2",
+      "name": "Solid State Reactor T2",
       "shape": [
         "  UUUU  ",
         "  PPPP  ",
@@ -97,8 +97,8 @@
       ]
     },
      {
-      "id": "solid_state_reactor_t1",
-      "name": "Solid State Reactor T1",
+      "id": "solid_state_reactor_t3",
+      "name": "Solid State Reactor T3",
       "shape": [
         "  PPPP  ",
         "  PPPP  ",
