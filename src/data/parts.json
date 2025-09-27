@@ -47,13 +47,33 @@
   ],
   "reactors": [
     {
-      "id": "r1",
-      "name": "Reactor A",
+      "id": "split_reactor_t1",
+      "name": "Split Reactor T1",
       "shape": [
-        " UU  UU ",
-        " UU  UU ",
-        " UU  UU ",
-        " PUUUUP "
+        "UU    UU",
+        "UUU  UUU",
+        "UUU  UUU",
+        "UUU  UUU"
+      ]
+    },
+     {
+      "id": "split_reactor_t2",
+      "name": "Split Reactor T2",
+      "shape": [
+        "UU    UU",
+        "UUU  UUU",
+        "PUU  UUP",
+        "PUU  UUP"
+      ]
+    },
+     {
+      "id": "split_reactor_t3",
+      "name": "Split Reactor T3",
+      "shape": [
+        "UU    UU",
+        "UUU  UUU",
+        "PPU  UPP",
+        "PPU  UPP"
       ]
     },
     {
