@@ -77,13 +77,33 @@
       ]
     },
     {
-      "id": "r2",
-      "name": "Reactor B",
+      "id": "solid_state_reactor_t1",
+      "name": "Solid State Reactor T1",
       "shape": [
         "  UUUU  ",
         "  UUUU  ",
+        "  PPPP  ",
+        "  PPPP  "
+      ]
+    },
+     {
+      "id": "solid_state_reactor_t1",
+      "name": "Solid State Reactor T1",
+      "shape": [
         "  UUUU  ",
-        "  UUUU  "
+        "  PPPP  ",
+        "  PPPP  ",
+        "  PPPP  "
+      ]
+    },
+     {
+      "id": "solid_state_reactor_t1",
+      "name": "Solid State Reactor T1",
+      "shape": [
+        "  PPPP  ",
+        "  PPPP  ",
+        "  PPPP  ",
+        "  PPPP  "
       ]
     },
     {
