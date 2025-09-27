@@ -1,9 +1,20 @@
 <template>
   <div>
-    <h1>Jump Space — Ship Configurator (Prototype)</h1>
+    <h1>Jump Space — Ship Configurator</h1>
     <div class="app">
       <div class="sidebar">
-        <h3>Choose Reactor & Aux (demo)</h3>
+        <h3 style="margin-top:12px">Select Ship</h3>
+        <div>
+          <label>Ship
+            <select v-model="ship" @change="applyHoles">
+              <option value="catamaran-t0">C-3 Catamaran T0</option>
+              <option value="catamaran-t1">C-3 Catamaran T1</option>
+              <option value="dart-t0">DT-4 Dart</option>
+            </select>
+          </label>
+        </div>
+
+        <h3 style="margin-top:12px">Choose Reactor & Aux. Generator</h3>
         <div>
           <label>Reactor:
             <select v-model="reactor" @change="applyHoles">
@@ -63,6 +74,7 @@ export default {
   setup() {
     const grid = reactive(Array.from({length: 8}, () => Array(8).fill(0)))
     const placed = reactive([])
+    const ship = ref('catamaran-t0')
     const reactor = ref('none')
     const aux1 = ref('none')
     const aux2 = ref('none')
@@ -180,6 +192,7 @@ export default {
       movePlaced,
       placed,
       clearGrid,
+      ship,
       reactor,
       aux1,
       aux2,
