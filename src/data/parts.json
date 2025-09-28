@@ -27,20 +27,79 @@
       ]
     },
     {
-      "id": "p4",
-      "name": "Tall 1x3",
-      "type": "Pilot Canons",
+      "id": "drift_phase_engine_t1",
+      "name": "Drift Phase Engine T1",
+      "type": "Engines",
+      "shape": [
+        "XXX"
+      ]
+    },
+     {
+      "id": "nitro_pulse_engine_t1",
+      "name": "Nitro Pulse Engine T1",
+      "type": "Engines",
+      "shape": [
+        "XXXX"
+      ]
+    },
+     {
+      "id": "microplasma_engine_t1",
+      "name": "Microplasma Engine T1",
+      "type": "Engines",
+      "shape": [
+        "X"
+      ]
+    },
+     {
+      "id": "mass_ejector_engine_t1",
+      "name": "Mass Ejector Engine T1",
+      "type": "Engines",
       "shape": [
         "XXX"
       ]
     },
     {
-      "id": "p5",
-      "name": "Special Spike",
-      "type": "Special Weapons",
+      "id": "fragment_canon_t1",
+      "name": "Fragment Canon T1",
+      "type": "Pilot Cannon",
       "shape": [
-        "X X",
-        " X "
+        "XXX"
+      ]
+    },
+    {
+      "id": "rapid_pulse_canon_t1",
+      "name": "Rapid Pulse Canon T1",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XXX",
+        "XXX"
+      ]
+    },
+    {
+      "id": "disruptor_laser_t1",
+      "name": "Disruptor Laser T1",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XX",
+        "X "
+      ]
+    },
+    {
+      "id": "bolt_accellerator_t1",
+      "name": "Bolt Accellerator T1",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XXX",
+        "X X"
+      ]
+    },
+    {
+      "id": "neu",
+      "name": "NEU",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XXX",
+        "X X"
       ]
     }
   ],
