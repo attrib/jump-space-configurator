@@ -7,6 +7,7 @@ body {
     font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
     margin: 12px;
     background-image: url("https://images.squarespace-cdn.com/content/v1/61a0b244de2c6f4f7fbc4108/96de7365-9de6-4e81-8526-70086d3bcc35/JumpShip_Website_Bg_Fuzzy.png");
+    background-size: cover;
     color: white;
 }
 

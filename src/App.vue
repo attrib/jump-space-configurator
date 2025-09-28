@@ -63,8 +63,8 @@
       Notes: This is a minimal client-side prototype. Rotate with R while dragging. Pieces cannot be placed on holes.
     </div>
     <div class="legal">
-      Images and data are property of Keepsake Games, Inc.<br>
-      <a href="https://jumpspacegame.com/">Jump Space</a> are registered trademarks of Keepsake Games, Inc.
+      Images and data are property of Keepsake Games<br>
+      <a href="https://jumpspacegame.com/">Jump Space</a> are registered trademarks of Keepsake Games.
     </div>
   </div>
 </template>
