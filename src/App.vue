@@ -50,16 +50,21 @@
           </div>
         </div>
 
-        <button style="margin-top:12px" @click="clearGrid">Clear Grid</button>
+
       </div>
 
       <div class="grid-area">
         <GridBoard ref="board" :grid="grid" :placed="placed" :cellSize="cellSize"
                    @try-place="tryPlace" @move-placed="movePlaced"/>
+        <button style="margin-top:12px" @click="clearGrid">Clear Grid</button>
       </div>
     </div>
     <div style="margin-top:8px;font-size:13px;color:#444">
       Notes: This is a minimal client-side prototype. Rotate with R while dragging. Pieces cannot be placed on holes.
+    </div>
+    <div class="legal">
+      Images and data are property of Keepsake Games, Inc.<br>
+      <a href="https://jumpspacegame.com/">Jump Space</a> are registered trademarks of Keepsake Games, Inc.
     </div>
   </div>
 </template>

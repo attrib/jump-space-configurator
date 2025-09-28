@@ -1,8 +1,49 @@
 
-:root{--cell-size:48px}
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:12px}
-.app{display:flex;gap:18px}
-.sidebar{width:260px}
-.grid-area{background:#f7f7fb;padding:12px;border-radius:8px}
-button{cursor:pointer}
-.piece { user-select:none; touch-action:none; }
+:root {
+    --cell-size: 48px
+}
+
+body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    margin: 12px;
+    background-image: url("https://images.squarespace-cdn.com/content/v1/61a0b244de2c6f4f7fbc4108/96de7365-9de6-4e81-8526-70086d3bcc35/JumpShip_Website_Bg_Fuzzy.png");
+    color: white;
+}
+
+#app {
+    text-align: center;
+}
+
+.app {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+}
+
+.sidebar {
+    width: 260px
+}
+
+.grid-area {
+    #background: #f7f7fbcc;
+    padding: 12px;
+    border-radius: 8px
+}
+
+button {
+    cursor: pointer
+}
+
+.piece {
+    user-select: none;
+    touch-action: none;
+}
+
+.legal {
+    font-size:13px;
+    color:#444;
+
+    a {
+        color:#444;
+    }
+}
