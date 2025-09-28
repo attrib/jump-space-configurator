@@ -1,30 +1,29 @@
 {
   "parts": [
     {
-      "id": "p1",
-      "name": "Engine 1x2",
-      "type": "Engines",
+      "id": "sector_scanner_t1",
+      "name": "Sector Scanner T1",
+      "type": "Sensors",
       "shape": [
         "XX"
       ]
     },
     {
-      "id": "p2",
-      "name": "L-shape",
-      "type": "Multi Turret Systems",
+      "id": "supply_uplink_unit_t1",
+      "name": "Supply Uplink Unit T1",
+      "type": "Sensors",
       "shape": [
-        "XXX",
-        "  X"
+        " XX",
+        "XX "
       ]
     },
     {
-      "id": "p3",
-      "name": "U-shape",
+      "id": "sector_targeting_module_t1",
+      "name": "Sector Targeting Module T1",
       "type": "Sensors",
       "shape": [
-        "X X",
-        "X X",
-        "XXX"
+        "XXX",
+        "X  "
       ]
     },
     {
@@ -137,39 +136,109 @@
       ]
     },
     {
-      "id": "r4",
-      "name": "Reactor D",
+      "id": "nuke_wave_reactor_t1",
+      "name": "Nuke Wave Reactor T1",
       "shape": [
-        " U  UU ",
-        "  U  UU ",
-        "U  UU  ",
-        " U  UU "
+        "UU    UU",
+        "UUU  UUU",
+        " PPUUPP ",
+        "  PUUP  "
+      ]
+    }
+  ],
+   {
+      "id": "nuke_wave_reactor_t2",
+      "name": "Nuke Wave Reactor T2",
+      "shape": [
+        "PU    UP",
+        "PUU  UUP",
+        " PPUUPP ",
+        "  PUUP  "
+      ]
+    }
+  ],
+ {
+      "id": "nuke_wave_reactor_t3",
+      "name": "Nuke Wave Reactor T3",
+      "shape": [
+        "PP    PP",
+        "PPU  UPP",
+        " PPUUPP ",
+        "  PUUP  "
       ]
     }
   ],
   "auxiliaries": [
     {
-      "id": "a1",
-      "name": "Aux X",
+      "id": "bio_fission_generator_t1",
+      "name": "Bio Fission Generator T1",
+      "shape": [
+        "  UUUU  ",
+        "  U  U  "
+      ]
+    },
+     {
+      "id": "bio_fission_generator_t2",
+      "name": "Bio Fission Generator T2",
+      "shape": [
+        " UUUUUU ",
+        " U    U "
+      ]
+    },
+     {
+      "id": "bio_fission_generator_t3",
+      "name": "Bio Fission Generator T3",
+      "shape": [
+        "PUUUUUUP",
+        "P      P"
+      ]
+    },
+    {
+      "id": "materia_shift_generator_t1",
+      "name": "Materia Shift Generator T1",
       "shape": [
         " UU  UU ",
         " UU  UU "
       ]
     },
     {
-      "id": "a2",
-      "name": "Aux Y",
+      "id": "materia_shift_generator_t2",
+      "name": "Materia Shift Generator T2",
       "shape": [
-        " UUUUUU ",
-        "        "
+        " UP  PU ",
+        " PU  UP "
       ]
     },
     {
-      "id": "a3",
-      "name": "Aux Z",
+      "id": "materia_shift_generator_t3",
+      "name": "Materia Shift Generator T3",
       "shape": [
-        "   UUUU ",
-        "        "
+        " UP  PU ",
+        " PP  PP "
+      ]
+    },
+    {
+      "id": "null_tension_generator_t1",
+      "name": "Null Tension Generator T1",
+      "shape": [
+        "  UUUU  ",
+        "  UUUU  "
+      ]
+    },
+     {
+      "id": "null_tension_generator_t2",
+      "name": "Null Tension Generator T2",
+      "shape": [
+        "  UUUU  ",
+        "  PUUP  "
+      ]
+    },
+     {
+      "id": "null_tension_generator_t3",
+      "name": "Null Tension Generator T3",
+      "shape": [
+        "  UUUU  ",
+        "  PPPP  "
       ]
     }
   ]
