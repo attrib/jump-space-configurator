@@ -35,8 +35,40 @@
       ]
     },
      {
+      "id": "drift_phase_engine_t2",
+      "name": "Drift Phase Engine T2",
+      "type": "Engines",
+      "shape": [
+        "XXX"
+      ]
+    },
+     {
+      "id": "drift_phase_engine_t3",
+      "name": "Drift Phase Engine T3",
+      "type": "Engines",
+      "shape": [
+        "XXX"
+      ]
+    },
+     {
       "id": "nitro_pulse_engine_t1",
       "name": "Nitro Pulse Engine T1",
+      "type": "Engines",
+      "shape": [
+        "XXXX"
+      ]
+    },
+     {
+      "id": "nitro_pulse_engine_t2",
+      "name": "Nitro Pulse Engine T2",
+      "type": "Engines",
+      "shape": [
+        "XXXX"
+      ]
+    },
+     {
+      "id": "nitro_pulse_engine_t3",
+      "name": "Nitro Pulse Engine T3",
       "type": "Engines",
       "shape": [
         "XXXX"
@@ -51,8 +83,40 @@
       ]
     },
      {
+      "id": "microplasma_engine_t2",
+      "name": "Microplasma Engine T2",
+      "type": "Engines",
+      "shape": [
+        "X"
+      ]
+    },
+     {
+      "id": "microplasma_engine_t3",
+      "name": "Microplasma Engine T3",
+      "type": "Engines",
+      "shape": [
+        "X"
+      ]
+    },
+     {
       "id": "mass_ejector_engine_t1",
       "name": "Mass Ejector Engine T1",
+      "type": "Engines",
+      "shape": [
+        "XXX"
+      ]
+    },
+     {
+      "id": "mass_ejector_engine_t2",
+      "name": "Mass Ejector Engine T2",
+      "type": "Engines",
+      "shape": [
+        "XXX"
+      ]
+    },
+     {
+      "id": "mass_ejector_engine_t3",
+      "name": "Mass Ejector Engine T3",
       "type": "Engines",
       "shape": [
         "XXX"
@@ -66,9 +130,45 @@
         "XXX"
       ]
     },
+     {
+      "id": "fragment_canon_t2",
+      "name": "Fragment Canon T2",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XXX",
+        " X "
+      ]
+    },
+     {
+      "id": "fragment_canon_t3",
+      "name": "Fragment Canon T3",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XXX",
+        " X "
+      ]
+    },
     {
       "id": "rapid_pulse_canon_t1",
       "name": "Rapid Pulse Canon T1",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XXX",
+        "XXX"
+      ]
+    },
+     {
+      "id": "rapid_pulse_canon_t2",
+      "name": "Rapid Pulse Canon T2",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XXX",
+        "XXX"
+      ]
+    },
+     {
+      "id": "rapid_pulse_canon_t3",
+      "name": "Rapid Pulse Canon T3",
       "type": "Pilot Cannon",
       "shape": [
         "XXX",
@@ -84,9 +184,44 @@
         "X "
       ]
     },
+     {
+      "id": "disruptor_laser_t2",
+      "name": "Disruptor Laser T2",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XX",
+        "X "
+      ]
+    },
+     {
+      "id": "disruptor_laser_t3",
+      "name": "Disruptor Laser T3",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XX"
+      ]
+    },
     {
       "id": "bolt_accellerator_t1",
       "name": "Bolt Accellerator T1",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XXX",
+        "X X"
+      ]
+    },
+    {
+      "id": "bolt_accellerator_t2",
+      "name": "Bolt Accellerator T2",
+      "type": "Pilot Cannon",
+      "shape": [
+        "XXX",
+        "X X"
+      ]
+    },
+    {
+      "id": "bolt_accellerator_t3",
+      "name": "Bolt Accellerator T3",
       "type": "Pilot Cannon",
       "shape": [
         "XXX",
@@ -102,9 +237,45 @@
         "X  "
       ]
     },
+     {
+      "id": "assault_turrets_t2",
+      "name": "Assault Turrets T2",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XXX",
+        "X  "
+      ]
+    },
+     {
+      "id": "assault_turrets_t3",
+      "name": "Assault Turrets T3",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XXX",
+        "X  "
+      ]
+    },
     {
       "id": "flak_launcher_turrets_t1",
       "name": "Flak Launcher Turrets T1",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XXXX",
+        "X  X"
+      ]
+    },
+     {
+      "id": "flak_launcher_turrets_t2",
+      "name": "Flak Launcher Turrets T2",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XXXX",
+        "X  X"
+      ]
+    },
+     {
+      "id": "flak_launcher_turrets_t3",
+      "name": "Flak Launcher Turrets T3",
       "type": "Multi Turret Systems",
       "shape": [
         "XXXX",
@@ -121,6 +292,26 @@
         "X  "
       ]
     },
+     {
+      "id": "gatling_turrets_t2",
+      "name": "Gatling Turrets T2",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XXX",
+        "XXX",
+        "X  "
+      ]
+    },
+     {
+      "id": "gatling_turrets_t3",
+      "name": "Gatling Turrets T3",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XXX",
+        "XXX",
+        "X  "
+      ]
+    },
     {
       "id": "mining_lasers_t1",
       "name": "Mining Lasers T1",
@@ -130,9 +321,46 @@
         "X "
       ]
     },
+     {
+      "id": "mining_lasers_t2",
+      "name": "Mining Lasers T2",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XX",
+        "X "
+      ]
+    },
+     {
+      "id": "mining_lasers_t3",
+      "name": "Mining Lasers T3",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XX"
+      ]
+    },
     {
       "id": "lance_railgun_t1",
       "name": "Lance Railgun T1",
+      "type": "Special Weapons",
+      "shape": [
+        "XXX",
+        "X X",
+        "X X"
+      ]
+    },
+    {
+      "id": "lance_railgun_t2",
+      "name": "Lance Railgun T2",
+      "type": "Special Weapons",
+      "shape": [
+        "XXX",
+        "X X",
+        "X X"
+      ]
+    },
+    {
+      "id": "lance_railgun_t3",
+      "name": "Lance Railgun T3",
       "type": "Special Weapons",
       "shape": [
         "XXX",
@@ -151,8 +379,46 @@
       ]
     },
     {
+      "id": "missile_launcher_t2",
+      "name": "Missile Launcher T2",
+      "type": "Special Weapons",
+      "shape": [
+        "XXX",
+        "XXX",
+        "XXX"
+      ]
+    },
+    {
+      "id": "missile_launcher_t3",
+      "name": "Missile Launcher T3",
+      "type": "Special Weapons",
+      "shape": [
+        "XXX",
+        "XXX",
+        "XXX"
+      ]
+    },
+    {
       "id": "burst_shield_t1",
       "name": "Burst Shield T1",
+      "type": "Special Weapons",
+      "shape": [
+        "XX",
+        "XX"
+      ]
+    },
+     {
+      "id": "burst_shield_t2",
+      "name": "Burst Shield T2",
+      "type": "Special Weapons",
+      "shape": [
+        "XX",
+        "XX"
+      ]
+    },
+     {
+      "id": "burst_shield_t3",
+      "name": "Burst Shield T3",
       "type": "Special Weapons",
       "shape": [
         "XX",
