@@ -94,12 +94,77 @@
       ]
     },
     {
-      "id": "neu",
-      "name": "NEU",
+      "id": "assault_turrets_t1",
+      "name": "Assault Turrets T1",
       "type": "Multi Turret Systems",
       "shape": [
         "XXX",
+        "X  "
+      ]
+    },
+    {
+      "id": "flak_launcher_turrets_t1",
+      "name": "Flak Launcher Turrets T1",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XXXX",
+        "X  X"
+      ]
+    },
+    {
+      "id": "gatling_turrets_t1",
+      "name": "Gatling Turrets T1",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XXX",
+        "XXX",
+        "X  "
+      ]
+    },
+    {
+      "id": "mining_lasers_t1",
+      "name": "Mining Lasers T1",
+      "type": "Multi Turret Systems",
+      "shape": [
+        "XX",
+        "X "
+      ]
+    },
+    {
+      "id": "lance_railgun_t1",
+      "name": "Lance Railgun T1",
+      "type": "Special Weapons",
+      "shape": [
+        "XXX",
+        "X X",
         "X X"
+      ]
+    },
+    {
+      "id": "missile_launcher_t1",
+      "name": "Missile Launcher T1",
+      "type": "Special Weapons",
+      "shape": [
+        "XXX",
+        "XXX",
+        "XXX"
+      ]
+    },
+    {
+      "id": "burst_shield_t1",
+      "name": "Burst Shield T1",
+      "type": "Special Weapons",
+      "shape": [
+        "XX",
+        "XX"
+      ]
+    },
+    {
+      "id": "targeting_module_t1",
+      "name": "Targeting Module T1",
+      "type": "Special Weapons",
+      "shape": [
+        "XX"
       ]
     }
   ],
