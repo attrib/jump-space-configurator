@@ -50,7 +50,7 @@
       </div>
 
       <div class="selection-area">
-        <SelectionArea :ship="selectedShip" :placed="placed" :parts="parts" :placeables="placeables"
+        <SelectionArea :ship="selectedShip" :placed="placed" :parts="parts" :placeables="placeables" :grid="grid"
                        @add-placeable="onAddPlaceable" @remove-placeable="onRemovePlaceable"/>
       </div>
     </div>
@@ -115,9 +115,15 @@ export default {
 
     function applyHoles() {
       for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) grid[y][x] = -1
-      applyHolesFor(reactors, reactor.value, 0)
-      applyHolesFor(auxiliaries, aux1.value, 4)
-      applyHolesFor(auxiliaries, aux2.value, 6)
+      const newGrid = Array.from({length: 8}, () => Array(8).fill(-1))
+
+      applyHolesFor(reactors, reactor.value, 0, newGrid)
+      applyHolesFor(auxiliaries, aux1.value, 4, newGrid)
+      applyHolesFor(auxiliaries, aux2.value, 6, newGrid)
+
+      for (let y = 0; y < 8; y++) {
+        grid[y] = newGrid[y]
+      }
       resetBoard()
     }
 
@@ -130,14 +136,14 @@ export default {
       placed.splice(0, placed.length)
     }
 
-    function applyHolesFor(list, selected, offsetY) {
+    function applyHolesFor(list, selected, offsetY, newGrid) {
       const item = list.find(i => i.id === selected)
       if (!item) return
       for (let [y, line] of item.shape.entries()) {
         for (let x = 0; x < 8; x++) {
           const ch = line[x]
-          if (ch === 'U') grid[y + offsetY][x] = 0
-          if (ch === 'P') grid[y + offsetY][x] = 1
+          if (ch === 'U') newGrid[y + offsetY][x] = 0
+          if (ch === 'P') newGrid[y + offsetY][x] = 1
         }
       }
     }

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div>Nodes total {{ stats.total }} / needed {{ stats.needed }} / open {{ stats.open }}</div>
     <div style="margin-bottom:8px;font-weight:bold">Select parts by type</div>
     <div v-for="cfg in typeMap" :key="cfg.shipKey" style="margin:6px 0">
       <div style="font-size:13px;color:#ccc;margin-bottom:4px">{{ cfg.label }}</div>
@@ -41,7 +42,7 @@ import {computed, reactive, watchEffect} from 'vue'
 
 export default {
   name: 'SelectionArea',
-  props: {ship: Object, placed: Array, parts: Array, placeables: Array},
+  props: {ship: Object, placed: Array, parts: Array, placeables: Array, grid: Array},
   emits: ['add-placeable', 'remove-placeable'],
   setup(props, {emit}) {
     const typeMap = [
@@ -62,6 +63,25 @@ export default {
         map[p.type].push(p)
       }
       return map
+    })
+
+    const stats = computed(() => {
+      const stats = {
+        total: 0,
+        needed: 0,
+        open: 0,
+      }
+      for (const line of props.grid) {
+        stats.total += line.filter((x) => x >= 0).length
+      }
+      for (const placed of props.placed) {
+        stats.needed += placed.cells.length
+      }
+      for (const placable of props.placeables) {
+        stats.needed += placable.shape.length
+      }
+      stats.open = stats.total - stats.needed
+      return stats
     })
 
     // Ensure selection arrays have the right length when ship changes
@@ -143,7 +163,7 @@ export default {
       emit('remove-placeable', index)
     }
 
-    return {typeMap, selections, partsByType, onSelect, normalizedCells, previewSize, cell, startDrag, remove}
+    return {typeMap, selections, partsByType, onSelect, normalizedCells, previewSize, cell, startDrag, remove, stats}
   }
 }
 </script>
