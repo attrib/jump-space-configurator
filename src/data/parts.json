@@ -629,5 +629,35 @@
         "  PPPP  "
       ]
     }
+  ],
+  "ships": [
+    {
+      "id": "catamaran-t0",
+      "name": "C-3 Catamaran T0",
+      "sensor": 1,
+      "engine": 1,
+      "pilotCannon": 1,
+      "multiTurretSystem": 1,
+      "specialWeapon": 1
+    },
+    {
+      "id": "catamaran-t1",
+      "name": "C-3 Catamaran T1",
+      "sensor": 1,
+      "engine": 1,
+      "pilotCannon": 1,
+      "multiTurretSystem": 1,
+      "specialWeapon": 2
+    },
+    {
+      "id": "dart-t0",
+      "name": "DT-4 Dart",
+      "sensor": 1,
+      "engine": 1,
+      "pilotCannon": 2,
+      "multiTurretSystem": 0,
+      "specialWeapon": 1
+    }
+
   ]
 }

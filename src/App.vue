@@ -6,10 +6,8 @@
         <h3 style="margin-top:12px">Select Ship</h3>
         <div>
           <label>Ship
-            <select v-model="ship" @change="applyHoles">
-              <option value="catamaran-t0">C-3 Catamaran T0</option>
-              <option value="catamaran-t1">C-3 Catamaran T1</option>
-              <option value="dart-t0">DT-4 Dart</option>
+            <select v-model="ship" @change="changeShip">
+              <option v-for="s in availableShips" :value=s.id>{{ s.name }}</option>
             </select>
           </label>
         </div>
@@ -57,10 +55,14 @@
         <GridBoard ref="board" :grid="grid" :placed="placed" :cellSize="cellSize"
                    @try-place="tryPlace" @move-placed="movePlaced"/>
         <button style="margin-top:12px" @click="clearGrid">Clear Grid</button>
+        <div style="margin-top:8px;font-size:13px;color:#444">
+          Notes: This is a minimal client-side prototype. Rotate with R while dragging. Pieces cannot be placed on holes.
+        </div>
       </div>
-    </div>
-    <div style="margin-top:8px;font-size:13px;color:#444">
-      Notes: This is a minimal client-side prototype. Rotate with R while dragging. Pieces cannot be placed on holes.
+      
+      <div class="selection-area">
+        <SelectionArea :ship="selectedShip" :placed="placed" :parts="parts"/>
+      </div>
     </div>
     <div class="legal">
       Images and data are property of Keepsake Games<br>
@@ -71,15 +73,17 @@
 
 <script>
 import GridBoard from './components/GridBoard.vue'
+import SelectionArea from './components/SelectionArea.vue'
 import {reactive, ref} from 'vue'
 import data from './data/parts.json'
 
 export default {
-  components: {GridBoard},
+  components: {GridBoard, SelectionArea},
   setup() {
     const grid = reactive(Array.from({length: 8}, () => Array(8).fill(0)))
     const placed = reactive([])
     const ship = ref('catamaran-t0')
+    const selectedShip  = reactive({})
     const reactor = ref('none')
     const aux1 = ref('none')
     const aux2 = ref('none')
@@ -107,14 +111,23 @@ export default {
 
     const auxiliaries = data.auxiliaries
 
+    const availableShips = data.ships
+
+    function changeShip() {
+      const foundShip = availableShips.find((s) => s.id === ship.value)
+      if (foundShip) {
+        Object.assign(selectedShip, foundShip)
+      }
+    }
+
+    changeShip()
+
     function applyHoles() {
       for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) grid[y][x] = -1
       applyHolesFor(reactors, reactor.value, 0)
       applyHolesFor(auxiliaries, aux1.value, 4)
       applyHolesFor(auxiliaries, aux2.value, 6)
       placed.splice(0, placed.length)
-      // remove focus state of all drop downs
-
     }
 
     function applyHolesFor(list, selected, offsetY) {
@@ -197,10 +210,13 @@ export default {
       movePlaced,
       placed,
       clearGrid,
+      availableShips,
       ship,
+      selectedShip,
       reactor,
       aux1,
       aux2,
+      changeShip,
       applyHoles,
       cellSize
     }
