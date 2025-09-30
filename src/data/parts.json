@@ -526,8 +526,8 @@
       ]
     },
     {
-      "id": "nuke_wave_reactor_t1",
-      "name": "Nuke Wave Reactor T1",
+      "id": "null_wave_reactor_t1",
+      "name": "Null Wave Reactor T1",
       "shape": [
         "UU    UU",
         "UUU  UUU",
@@ -536,8 +536,8 @@
       ]
     },
    {
-      "id": "nuke_wave_reactor_t2",
-      "name": "Nuke Wave Reactor T2",
+      "id": "null_wave_reactor_t2",
+      "name": "Null Wave Reactor T2",
       "shape": [
         "PU    UP",
         "PUU  UUP",
@@ -546,8 +546,8 @@
       ]
     },
  {
-      "id": "nuke_wave_reactor_t3",
-      "name": "Nuke Wave Reactor T3",
+      "id": "null_wave_reactor_t3",
+      "name": "Null Wave Reactor T3",
       "shape": [
         "PP    PP",
         "PPU  UPP",
