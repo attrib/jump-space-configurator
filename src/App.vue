@@ -38,17 +38,6 @@
           </label>
         </div>
 
-        <h3 style="margin-top:12px">Parts (drag onto grid)</h3>
-        <div>
-          <div v-for="p in parts" :key="p.id" class="piece"
-               :style="{border:'1px solid #ccc', padding:'6px', margin:'6px 0', display:'inline-block'}"
-               @pointerdown.prevent="startDrag($event, p)">
-            <strong>{{ p.name }}</strong>
-            <div style="font-size:12px;color:#555">{{ p.type }}</div>
-          </div>
-        </div>
-
-
       </div>
 
       <div class="grid-area">
@@ -59,9 +48,10 @@
           Notes: This is a minimal client-side prototype. Rotate with R while dragging. Pieces cannot be placed on holes.
         </div>
       </div>
-      
+
       <div class="selection-area">
-        <SelectionArea :ship="selectedShip" :placed="placed" :parts="parts"/>
+        <SelectionArea :ship="selectedShip" :placed="placed" :parts="parts" :placeables="placeables"
+                       @add-placeable="onAddPlaceable" @remove-placeable="onRemovePlaceable"/>
       </div>
     </div>
     <div class="legal">
@@ -82,6 +72,7 @@ export default {
   setup() {
     const grid = reactive(Array.from({length: 8}, () => Array(8).fill(0)))
     const placed = reactive([])
+    const placeables = reactive([])
     const ship = ref('catamaran-t0')
     const selectedShip  = reactive({})
     const reactor = ref('none')
@@ -127,6 +118,15 @@ export default {
       applyHolesFor(reactors, reactor.value, 0)
       applyHolesFor(auxiliaries, aux1.value, 4)
       applyHolesFor(auxiliaries, aux2.value, 6)
+      resetBoard()
+    }
+
+    function resetBoard() {
+      for (const p of placed) {
+        const part = parts.find((part) => part.id === p.partId)
+        const idx = p.id.split('_')[1]
+        placeables.push({...part, idx: idx})
+      }
       placed.splice(0, placed.length)
     }
 
@@ -185,9 +185,12 @@ export default {
           }
         }
       }
-      const id = part.id + '_' + (placed.length + 1)
+      const id = part.type + '_' + part.idx
       const cells = final.map(c => c)
       placed.push({id, partId: part.id, name: part.name, cells})
+      // Remove one matching part from placeables (first occurrence)
+      const idxPl = placeables.findIndex(pp => pp.id === part.id && pp.idx === part.idx)
+      if (idxPl !== -1) placeables.splice(idxPl, 1)
       return {ok: true, id}
     }
 
@@ -196,7 +199,29 @@ export default {
       if (idx !== -1) {
         placed.splice(idx, 1)
         const part = parts.find(p => p.id === placedPart.partId)
+        if (part) placeables.push(part)
         document.dispatchEvent(new CustomEvent('jumpspace-drag-start', {detail: {part}, bubbles: true}))
+      }
+    }
+
+    function onAddPlaceable(part) {
+      const idxPlacable = placeables.findIndex(pp => (pp.type === part.type && pp.idx === part.idx))
+      if (idxPlacable !== -1) placeables.splice(idxPlacable, 1)
+      const idxPlaced = placed.findIndex(pp => pp.id === part.type + '_' + part.idx)
+      if (idxPlaced !== -1) placed.splice(idxPlaced, 1)
+      if (part) placeables.push(part)
+    }
+
+    function onRemovePlaceable(payload) {
+      // payload can be index or id
+      if (typeof payload === 'number') {
+        if (payload >= 0 && payload < placeables.length) placeables.splice(payload, 1)
+      } else if (typeof payload === 'string') {
+        const i = placeables.findIndex(p => p.id === payload)
+        if (i !== -1) placeables.splice(i, 1)
+      } else if (payload && payload.id) {
+        const i = placeables.findIndex(p => p.id === payload.id)
+        if (i !== -1) placeables.splice(i, 1)
       }
     }
 
@@ -218,7 +243,10 @@ export default {
       aux2,
       changeShip,
       applyHoles,
-      cellSize
+      cellSize,
+      placeables,
+      onAddPlaceable,
+      onRemovePlaceable
     }
   }
 }
