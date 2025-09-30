@@ -43,7 +43,7 @@ import {computed, onMounted, reactive, watchEffect} from 'vue'
 export default {
   name: 'SelectionArea',
   props: {ship: Object, placed: Array, parts: Array, placeables: Array, grid: Array},
-  emits: ['add-placeable', 'remove-placeable'],
+  emits: ['add-placeable', 'remove-placeable', 'clear-placeable'],
   setup(props, {emit}) {
     const typeMap = [
       { shipKey: 'sensor', label: 'Sensor', partType: 'Sensors' },
@@ -121,9 +121,15 @@ export default {
 
     function onSelect(cfg, idx) {
       const id = selections[cfg.shipKey][idx]
-      if (!id) return
+      if (!id) {
+        emit('clear-placeable', {type: cfg.partType, idx: idx})
+        return
+      }
       const part = (partsByType.value[cfg.partType] || []).find(p => p.id === id)
-      if (!part) return
+      if (!part) {
+        emit('clear-placeable', {type: cfg.partType, idx: idx})
+        return
+      }
       const clonedPart = {...part, shape: part.shape ? [...part.shape] : []}
       clonedPart.idx = idx
       emit('add-placeable', clonedPart)

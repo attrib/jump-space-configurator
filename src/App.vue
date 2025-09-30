@@ -51,7 +51,7 @@
 
       <div class="selection-area">
         <SelectionArea :ship="selectedShip" :placed="placed" :parts="parts" :placeables="placeables" :grid="grid"
-                       @add-placeable="onAddPlaceable" @remove-placeable="onRemovePlaceable"/>
+                       @add-placeable="onAddPlaceable" @remove-placeable="onRemovePlaceable" @clear-placeable="onClearPlaceable"/>
       </div>
     </div>
     <div class="legal">
@@ -131,7 +131,7 @@ export default {
       for (const p of placed) {
         const part = parts.find((part) => part.id === p.partId)
         const idx = p.id.split('_')[1]
-        placeables.push({...part, idx: idx})
+        placeables.push({...part, idx: parseInt(idx)})
       }
       placed.splice(0, placed.length)
     }
@@ -231,6 +231,13 @@ export default {
         const i = placeables.findIndex(p => p.id === payload.id)
         if (i !== -1) placeables.splice(i, 1)
       }
+    }
+
+    function onClearPlaceable({type, idx}) {
+      const idxPlacable = placeables.findIndex(pp => (pp.type === type && pp.idx === idx))
+      if (idxPlacable !== -1) placeables.splice(idxPlacable, 1)
+      const idxPlaced = placed.findIndex(pp => pp.id === type + '_' + idx)
+      if (idxPlaced !== -1) placed.splice(idxPlaced, 1)
     }
 
     // --- URL state sync ---
@@ -357,7 +364,8 @@ export default {
       cellSize,
       placeables,
       onAddPlaceable,
-      onRemovePlaceable
+      onRemovePlaceable,
+      onClearPlaceable
     }
   }
 }
