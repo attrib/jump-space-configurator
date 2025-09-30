@@ -206,7 +206,7 @@ export default {
         placed.splice(idx, 1)
         const base = parts.find(p => p.id === placedPart.partId)
         const slotIdx = String(placedPart.id).split('_')[1]
-        const part = base ? {...base, idx: slotIdx} : null
+        const part = base ? {...base, idx: parseInt(slotIdx)} : null
         if (part) placeables.push(part)
         if (part) document.dispatchEvent(new CustomEvent('jumpspace-drag-start', {detail: {part}, bubbles: true}))
       }
@@ -244,7 +244,7 @@ export default {
         a1: aux1.value,
         a2: aux2.value,
         pl: placeables.map(p => ({ id: p.id, idx: p.idx })),
-        pd: placed.map(p => ({ partId: p.partId, idx: String(p.id).split('_')[1], cells: p.cells }))
+        pd: placed.map(p => ({ partId: p.partId, idx: parseInt(String(p.id).split('_')[1]), cells: p.cells }))
       }
     }
 
@@ -307,6 +307,7 @@ export default {
             }
           }
         }
+        document.dispatchEvent(new CustomEvent('apply-state', {}))
       } finally {
         suppressUrlUpdate = false
       }

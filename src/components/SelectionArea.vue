@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import {computed, reactive, watchEffect} from 'vue'
+import {computed, onMounted, reactive, watchEffect} from 'vue'
 
 export default {
   name: 'SelectionArea',
@@ -82,6 +82,22 @@ export default {
       }
       stats.open = stats.total - stats.needed
       return stats
+    })
+
+    onMounted(() => {
+      document.addEventListener('apply-state', (ev) => {
+        for (const placed of props.placed) {
+          const [partType, idx] = placed.id.split('_')
+          const cfg = typeMap.find((t) => t.partType === partType)
+          if (!selections[cfg.shipKey]) selections[cfg.shipKey] = []
+          selections[cfg.shipKey][idx] = placed.partId
+        }
+        for (const placable of props.placeables) {
+          const cfg = typeMap.find((t) => t.partType === placable.type)
+          if (!selections[cfg.shipKey]) selections[cfg.shipKey] = []
+          selections[cfg.shipKey][placable.idx] = placable.id
+        }
+      })
     })
 
     // Ensure selection arrays have the right length when ship changes
