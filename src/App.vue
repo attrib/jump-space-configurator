@@ -64,7 +64,7 @@
 <script>
 import GridBoard from './components/GridBoard.vue'
 import SelectionArea from './components/SelectionArea.vue'
-import {reactive, ref} from 'vue'
+import {reactive, ref, watch, onMounted} from 'vue'
 import data from './data/parts.json'
 
 export default {
@@ -204,9 +204,11 @@ export default {
       const idx = placed.findIndex(p => p.id === placedPart.id)
       if (idx !== -1) {
         placed.splice(idx, 1)
-        const part = parts.find(p => p.id === placedPart.partId)
+        const base = parts.find(p => p.id === placedPart.partId)
+        const slotIdx = String(placedPart.id).split('_')[1]
+        const part = base ? {...base, idx: slotIdx} : null
         if (part) placeables.push(part)
-        document.dispatchEvent(new CustomEvent('jumpspace-drag-start', {detail: {part}, bubbles: true}))
+        if (part) document.dispatchEvent(new CustomEvent('jumpspace-drag-start', {detail: {part}, bubbles: true}))
       }
     }
 
@@ -230,6 +232,108 @@ export default {
         if (i !== -1) placeables.splice(i, 1)
       }
     }
+
+    // --- URL state sync ---
+    let suppressUrlUpdate = false
+    let urlTimer = null
+
+    function buildState() {
+      return {
+        ship: ship.value,
+        r: reactor.value,
+        a1: aux1.value,
+        a2: aux2.value,
+        pl: placeables.map(p => ({ id: p.id, idx: p.idx })),
+        pd: placed.map(p => ({ partId: p.partId, idx: String(p.id).split('_')[1], cells: p.cells }))
+      }
+    }
+
+    function encodeState(obj) {
+      try {
+        const json = JSON.stringify(obj)
+        return btoa(unescape(encodeURIComponent(json)))
+      } catch (e) {
+        try { return btoa(JSON.stringify(obj)) } catch (e2) { return '' }
+      }
+    }
+
+    function decodeState(str) {
+      try {
+        const json = decodeURIComponent(escape(atob(str)))
+        return JSON.parse(json)
+      } catch (e) {
+        try { return JSON.parse(atob(str)) } catch (e2) { return null }
+      }
+    }
+
+    function updateUrlFromState() {
+      if (suppressUrlUpdate) return
+      const enc = encodeState(buildState())
+      const newHash = '#s=' + enc
+      if (location.hash !== newHash) {
+        const url = location.pathname + location.search + newHash
+        history.replaceState(null, '', url)
+      }
+    }
+
+    function applyState(state) {
+      if (!state) return
+      suppressUrlUpdate = true
+      try {
+        // Set ship and power units
+        if (state.ship && availableShips.some(s => s.id === state.ship)) {
+          ship.value = state.ship
+          changeShip()
+        }
+        reactor.value = state.r && reactors.some(r => r.id === state.r) ? state.r : 'none'
+        aux1.value = state.a1 && auxiliaries.some(a => a.id === state.a1) ? state.a1 : 'none'
+        aux2.value = state.a2 && auxiliaries.some(a => a.id === state.a2) ? state.a2 : 'none'
+        applyHoles()
+        // Restore lists
+        placeables.splice(0, placeables.length)
+        if (Array.isArray(state.pl)) {
+          for (const p of state.pl) {
+            const base = parts.find(pp => pp.id === p.id)
+            if (base) placeables.push({ ...base, idx: p.idx })
+          }
+        }
+        placed.splice(0, placed.length)
+        if (Array.isArray(state.pd)) {
+          for (const p of state.pd) {
+            const base = parts.find(pp => pp.id === p.partId)
+            if (base && Array.isArray(p.cells)) {
+              const id = base.type + '_' + p.idx
+              placed.push({ id, partId: base.id, name: base.name, cells: p.cells.map(c => [c[0], c[1]]) })
+            }
+          }
+        }
+      } finally {
+        suppressUrlUpdate = false
+      }
+      // Ensure URL matches parsed state (normalizes ordering)
+      updateUrlFromState()
+    }
+
+    function scheduleUrlUpdate() {
+      if (suppressUrlUpdate) return
+      if (urlTimer) clearTimeout(urlTimer)
+      urlTimer = setTimeout(updateUrlFromState, 150)
+    }
+
+    onMounted(() => {
+      // Load initial state from URL if present
+      const m = /^#s=(.+)$/.exec(location.hash || '')
+      if (m && m[1]) {
+        const st = decodeState(m[1])
+        if (st) applyState(st)
+      } else {
+        updateUrlFromState()
+      }
+    })
+
+    watch([ship, reactor, aux1, aux2], scheduleUrlUpdate)
+    watch(placeables, scheduleUrlUpdate, { deep: true })
+    watch(placed, scheduleUrlUpdate, { deep: true })
 
     return {
       grid,
