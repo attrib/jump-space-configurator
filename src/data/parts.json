@@ -1,6 +1,15 @@
 {
   "parts": [
     {
+      "id": "jump_drive",
+      "name": "Jump Drive",
+      "type": "Jump Drives",
+      "shape": [
+        "XX",
+        "X"
+      ]
+    },
+    {
       "id": "sector_scanner_t1",
       "name": "Sector Scanner T1",
       "type": "Sensors",
@@ -19,7 +28,7 @@
     },
     {
       "id": "sector_targeting_module_t1",
-      "name": "Sector Targeting Module T1",
+      "name": "Vector Targeting Module T1",
       "type": "Sensors",
       "shape": [
         "XXX",
@@ -638,7 +647,8 @@
       "engine": 1,
       "pilotCannon": 1,
       "multiTurretSystem": 1,
-      "specialWeapon": 1
+      "specialWeapon": 1,
+      "jumpDrive": 1
     },
     {
       "id": "catamaran-t1",
@@ -647,7 +657,8 @@
       "engine": 1,
       "pilotCannon": 1,
       "multiTurretSystem": 1,
-      "specialWeapon": 2
+      "specialWeapon": 2,
+      "jumpDrive": 1
     },
     {
       "id": "dart-t0",
@@ -656,7 +667,8 @@
       "engine": 1,
       "pilotCannon": 2,
       "multiTurretSystem": 0,
-      "specialWeapon": 1
+      "specialWeapon": 1,
+      "jumpDrive": 1
     }
 
   ]

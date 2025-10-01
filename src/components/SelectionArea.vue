@@ -8,7 +8,7 @@
         <select v-for="(n, idx) in (ship && ship[cfg.shipKey] ? ship[cfg.shipKey] : 0)" :key="cfg.shipKey+'-'+idx"
                 v-model="selections[cfg.shipKey][idx]" @change="onSelect(cfg, idx)"
                 style="min-width:180px">
-          <option value="">None</option>
+          <option value="" v-if="cfg.shipKey !== 'jumpDrive'">None</option>
           <option v-for="p in partsByType[cfg.partType]" :value="p.id">{{ p.name }}</option>
         </select>
       </div>
@@ -53,6 +53,7 @@ export default {
   emits: ['add-placeable', 'remove-placeable', 'clear-placeable'],
   setup(props, {emit}) {
     const typeMap = [
+      { shipKey: 'jumpDrive', label: 'Jump Drives', partType: 'Jump Drives' },
       { shipKey: 'sensor', label: 'Sensor', partType: 'Sensors' },
       { shipKey: 'engine', label: 'Engine', partType: 'Engines' },
       { shipKey: 'pilotCannon', label: 'Pilot Cannon', partType: 'Pilot Cannon' },
