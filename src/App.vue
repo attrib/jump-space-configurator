@@ -43,7 +43,10 @@
       <div class="grid-area">
         <GridBoard ref="board" :grid="grid" :placed="placed" :cellSize="cellSize"
                    @try-place="tryPlace" @move-placed="movePlaced"/>
-        <button style="margin-top:12px" @click="clearGrid">Clear Grid</button>
+        <div style="margin-top:12px; display:flex; gap:8px; justify-content: center;">
+          <button @click="clearGrid">Clear Grid</button>
+          <button @click="autoSolve">Auto Solve</button>
+        </div>
         <div style="margin-top:8px;font-size:13px;color:#444">
           Notes: This is a minimal client-side prototype. Rotate with R while dragging.
         </div>
@@ -351,6 +354,108 @@ export default {
     watch(placeables, scheduleUrlUpdate, { deep: true })
     watch(placed, scheduleUrlUpdate, { deep: true })
 
+    // ---- Auto Solve (backtracking) ----
+    function canPlace(part, x, y, rotation, occupied) {
+      for (const [sx, sy] of part.shape) {
+        let tx = sx, ty = sy
+        const r = rotation % 4
+        if (r === 1) { tx = sy; ty = -sx }
+        if (r === 2) { tx = -sx; ty = -sy }
+        if (r === 3) { tx = -sy; ty = sx }
+        const gx = x + tx
+        const gy = y + ty
+        if (gx < 0 || gy < 0 || gx >= 8 || gy >= 8) return false
+        if (grid[gy][gx] === -1) return false
+        if (occupied.has(gx + ',' + gy)) return false
+      }
+      return true
+    }
+
+    function getCells(part, x, y, rotation) {
+      const cells = []
+      for (const [sx, sy] of part.shape) {
+        let tx = sx, ty = sy
+        const r = rotation % 4
+        if (r === 1) { tx = sy; ty = -sx }
+        if (r === 2) { tx = -sx; ty = -sy }
+        if (r === 3) { tx = -sy; ty = sx }
+        cells.push([x + tx, y + ty])
+      }
+      return cells
+    }
+
+    function enumeratePlacements(part, occupied) {
+      const placements = []
+      for (let r = 0; r < 4; r++) {
+        for (let y = 0; y < 8; y++) {
+          for (let x = 0; x < 8; x++) {
+            if (canPlace(part, x, y, r, occupied)) {
+              placements.push({ part, x, y, rotation: r, cells: getCells(part, x, y, r) })
+            }
+          }
+        }
+      }
+      return placements
+    }
+
+    function solveBacktracking(partsToPlace, occupied) {
+      if (partsToPlace.length === 0) return []
+      // Choose the part with fewest placement options (MRV heuristic)
+      let bestIdx = -1
+      let bestOptions = null
+      let bestPlacements = null
+      for (let i = 0; i < partsToPlace.length; i++) {
+        const opts = enumeratePlacements(partsToPlace[i], occupied)
+        if (opts.length === 0) return null
+        if (bestOptions === null || opts.length < bestOptions) {
+          bestOptions = opts.length
+          bestIdx = i
+          bestPlacements = opts
+          if (bestOptions === 1) break
+        }
+      }
+      // Try each placement
+      const nextParts = partsToPlace.slice()
+      const part = nextParts.splice(bestIdx, 1)[0]
+      for (const plc of bestPlacements) {
+        const newly = []
+        for (const c of plc.cells) newly.push(c[0] + ',' + c[1])
+        for (const key of newly) occupied.add(key)
+        const sub = solveBacktracking(nextParts, occupied)
+        if (sub) return [plc, ...sub]
+        for (const key of newly) occupied.delete(key)
+      }
+      return null
+    }
+
+    function autoSolve() {
+      // Snapshot current state
+      const remaining = placeables.slice() // parts with unique idx
+      if (remaining.length === 0) {
+        alert('Nothing to place: selection is empty.')
+        return
+      }
+      const occupied = new Set()
+      for (const pl of placed) {
+        for (const c of pl.cells) occupied.add(c[0] + ',' + c[1])
+      }
+      const solution = solveBacktracking(remaining, occupied)
+      if (!solution) {
+        alert('No complete solution found for the current selection and grid.')
+        return
+      }
+      // Apply solution by placing in order
+      for (const step of solution) {
+        const res = tryPlace({ part: step.part, x: step.x, y: step.y, rotation: step.rotation })
+        if (!res || !res.ok) {
+          // This should not happen; abort if it does
+          console.warn('Unexpected placement failure during apply:', step)
+          alert('Unexpected error while applying the solution.')
+          return
+        }
+      }
+    }
+
     return {
       grid,
       parts,
@@ -373,7 +478,8 @@ export default {
       placeables,
       onAddPlaceable,
       onRemovePlaceable,
-      onClearPlaceable
+      onClearPlaceable,
+      autoSolve
     }
   }
 }
