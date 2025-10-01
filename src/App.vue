@@ -6,7 +6,7 @@
         <h3 style="margin-top:12px">Select Ship</h3>
         <div>
           <label>Ship
-            <select v-model="ship" @change="changeShip">
+            <select v-model="ship">
               <option v-for="s in availableShips" :value=s.id>{{ s.name }}</option>
             </select>
           </label>
@@ -15,7 +15,7 @@
         <h3 style="margin-top:12px">Choose Reactor & Aux. Generator</h3>
         <div>
           <label>Reactor:
-            <select v-model="reactor" @change="applyHoles">
+            <select v-model="reactor">
               <option value="none">none</option>
               <option v-for="r in reactors" :value=r.id>{{ r.name }}</option>
             </select>
@@ -23,7 +23,7 @@
         </div>
         <div style="margin-top:8px">
           <label>Aux 1:
-            <select v-model="aux1" @change="applyHoles">
+            <select v-model="aux1">
               <option value="none">none</option>
               <option v-for="a in auxiliaries" :value=a.id>{{ a.name }}</option>
             </select>
@@ -31,7 +31,7 @@
         </div>
         <div style="margin-top:8px">
           <label>Aux 2:
-            <select v-model="aux2" @change="applyHoles">
+            <select v-model="aux2">
               <option value="none">none</option>
               <option v-for="a in auxiliaries" :value=a.id>{{ a.name }}</option>
             </select>
@@ -44,8 +44,8 @@
         <GridBoard ref="board" :grid="grid" :placed="placed" :cellSize="cellSize"
                    @try-place="tryPlace" @move-placed="movePlaced"/>
         <div style="margin-top:12px; display:flex; gap:8px; justify-content: center;">
-          <button @click="clearGrid">Clear Grid</button>
-          <button @click="autoSolve">Auto Solve</button>
+          <button @click="resetBoard">Clear Grid</button>
+          <button @click="autoSolve" :disabled="placeables.length === 0">Auto Solve</button>
         </div>
         <div style="margin-top:8px;font-size:13px;color:#444">
           Notes: This is a minimal client-side prototype. Rotate with R while dragging.
@@ -53,7 +53,7 @@
       </div>
 
       <div class="selection-area">
-        <SelectionArea :ship="selectedShip" :placed="placed" :parts="parts" :placeables="placeables" :grid="grid"
+        <SelectionArea :ship="selectedShip" :placed="placed" :placeables="placeables" :grid="grid"
                        @add-placeable="onAddPlaceable" @remove-placeable="onRemovePlaceable" @clear-placeable="onClearPlaceable"/>
       </div>
     </div>
@@ -75,442 +75,134 @@
 <script>
 import GridBoard from './components/GridBoard.vue'
 import SelectionArea from './components/SelectionArea.vue'
-import {reactive, ref, watch, onMounted} from 'vue'
-import data from './data/parts.json'
-
-/** @typedef {import('./types').Grid} Grid */
-/** @typedef {import('./types').Part} Part */
-/** @typedef {import('./types').Placeable} Placeable */
-/** @typedef {import('./types').PlacedPart} PlacedPart */
-/** @typedef {import('./types').Ship} Ship */
-/** @typedef {import('./types').Reactor} Reactor */
-/** @typedef {import('./types').Auxiliary} Auxiliary */
-/** @typedef {import('./types').TryPlacePayload} TryPlacePayload */
+import { computed, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useShipStore } from './stores/shipStore'
+import { useGridStore } from './stores/gridStore'
+import { useSolver } from './composables/useSolver'
+import { useUrlState } from './composables/useUrlState'
+import { useGridManager } from './composables/useGridManager'
 
 export default {
-  components: {GridBoard, SelectionArea},
+  components: { GridBoard, SelectionArea },
   setup() {
-    /** @type {Grid} */
-    const grid = reactive(Array.from({length: 8}, () => Array(8).fill(0)))
-    /** @type {PlacedPart[]} */
-    const placed = reactive([])
-    /** @type {Placeable[]} */
-    const placeables = reactive([])
-    /** @type {Ship['id']} */
-    const ship = ref('catamaran-t0')
-    /** @type {Ship} */
-    const selectedShip  = reactive({})
-    /** @type {Reactor['id'] | 'none'} */
-    const reactor = ref('none')
-    /** @type {Auxiliary['id'] | 'none'} */
-    const aux1 = ref('none')
-    /** @type {Auxiliary['id'] | 'none'} */
-    const aux2 = ref('none')
+    const shipStore = useShipStore()
+    const gridStore = useGridStore()
+    const { solve } = useSolver()
+    const { initializeFromUrl, setupWatchers } = useUrlState()
+    const { applyHoles, tryPlace, movePlaced, resetBoard, checkAll } = useGridManager()
+
+    const { selectedShip } = storeToRefs(shipStore)
+    const { grid, placed, placeables } = storeToRefs(gridStore)
+
     const cellSize = 48
 
-    /** @type {Part[]} */
-    const parts = data.parts
-
-    function parseShape(part) {
-      let shape = [];
-      for (let y = 0; y < part.shape.length; y++) {
-        for (let x = 0; x < part.shape[y].length; x++) {
-          if (part.shape[y][x] === 'X') {
-            shape.push([x, y]);
-          }
-        }
-      }
-      part.shape = shape
-    }
-
-    for (let part of parts) {
-      parseShape(part)
-    }
-
-    /** @type {Reactor[]} */
-    const reactors = data.reactors
-
-    /** @type {Auxiliary[]} */
-    const auxiliaries = data.auxiliaries
-
-    /** @type {Ship[]} */
-    const availableShips = data.ships
-
-    function changeShip() {
-      const foundShip = availableShips.find((s) => s.id === ship.value)
-      if (foundShip) {
-        Object.assign(selectedShip, foundShip)
-      }
-    }
-
-    changeShip()
-
-    function applyHoles() {
-      for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) grid[y][x] = -1
-      const newGrid = Array.from({length: 8}, () => Array(8).fill(-1))
-
-      applyHolesFor(reactors, reactor.value, 0, newGrid)
-      applyHolesFor(auxiliaries, aux1.value, 4, newGrid)
-      applyHolesFor(auxiliaries, aux2.value, 6, newGrid)
-
-      for (let y = 0; y < 8; y++) {
-        grid[y] = newGrid[y]
-      }
-      resetBoard()
-    }
-
-    function resetBoard() {
-      for (const p of placed) {
-        const part = parts.find((part) => part.id === p.partId)
-        const idx = p.id.split('_')[1]
-        placeables.push({...part, idx: parseInt(idx)})
-      }
-      placed.splice(0, placed.length)
-    }
-
-    /**
-     * @param {(Reactor[]|Auxiliary[])} list
-     * @param {string} selected
-     * @param {number} offsetY
-     * @param {Grid} newGrid
-     */
-    function applyHolesFor(list, selected, offsetY, newGrid) {
-      const item = list.find(i => i.id === selected)
-      if (!item) return
-      for (let [y, line] of item.shape.entries()) {
-        for (let x = 0; x < 8; x++) {
-          const ch = line[x]
-          if (ch === 'U') newGrid[y + offsetY][x] = 0
-          if (ch === 'P') newGrid[y + offsetY][x] = 1
-        }
-      }
-    }
-
-    applyHoles()
-
-    function clearGrid() {
-      applyHoles()
-    }
-
-    function startDrag(e, part) {
-      if (document.activeElement && typeof document.activeElement.blur === 'function') {
-        document.activeElement.blur()
-      }
-      document.dispatchEvent(new CustomEvent('jumpspace-drag-start', {detail: {part}, bubbles: true}))
-    }
-
-    /**
-     * @param {TryPlacePayload} payload
-     * @returns {{ok: boolean, id?: string}}
-     */
-    function tryPlace(payload) {
-      const {part, x, y, rotation} = payload
-      const coords = []
-      for (const [sx, sy] of part.shape) {
-        let tx = sx, ty = sy
-        const r = rotation % 4
-        if (r === 1) {
-          tx = sy;
-          ty = -sx
-        }
-        if (r === 2) {
-          tx = -sx;
-          ty = -sy
-        }
-        if (r === 3) {
-          tx = -sy;
-          ty = sx
-        }
-        coords.push([x + tx, y + ty])
-      }
-      const final = coords
-      for (const [gx, gy] of final) {
-        if (gx < 0 || gy < 0 || gx >= 8 || gy >= 8) return {ok: false}
-        if (grid[gy][gx] === -1) return {ok: false}
-        for (const pl of placed) {
-          for (const c of pl.cells) {
-            if (c[0] === gx && c[1] === gy) return {ok: false}
-          }
-        }
-      }
-      const id = part.type + '_' + part.idx
-      const cells = final.map(c => c)
-      placed.push({id, partId: part.id, name: part.name, cells})
-      // Remove one matching part from placeables (first occurrence)
-      const idxPl = placeables.findIndex(pp => pp.id === part.id && pp.idx === part.idx)
-      if (idxPl !== -1) placeables.splice(idxPl, 1)
-      return {ok: true, id}
-    }
-
-    function movePlaced(placedPart) {
-      const idx = placed.findIndex(p => p.id === placedPart.id)
-      if (idx !== -1) {
-        placed.splice(idx, 1)
-        const base = parts.find(p => p.id === placedPart.partId)
-        const slotIdx = String(placedPart.id).split('_')[1]
-        const part = base ? {...base, idx: parseInt(slotIdx)} : null
-        if (part) placeables.push(part)
-        if (part) document.dispatchEvent(new CustomEvent('jumpspace-drag-start', {detail: {part}, bubbles: true}))
-      }
-    }
-
-    function onAddPlaceable(part) {
-      const idxPlacable = placeables.findIndex(pp => (pp.type === part.type && pp.idx === part.idx))
-      if (idxPlacable !== -1) placeables.splice(idxPlacable, 1)
-      const idxPlaced = placed.findIndex(pp => pp.id === part.type + '_' + part.idx)
-      if (idxPlaced !== -1) placed.splice(idxPlaced, 1)
-      if (part) placeables.push(part)
-    }
-
-    function onRemovePlaceable(payload) {
-      // payload can be index or id
-      if (typeof payload === 'number') {
-        if (payload >= 0 && payload < placeables.length) placeables.splice(payload, 1)
-      } else if (typeof payload === 'string') {
-        const i = placeables.findIndex(p => p.id === payload)
-        if (i !== -1) placeables.splice(i, 1)
-      } else if (payload && payload.id) {
-        const i = placeables.findIndex(p => p.id === payload.id)
-        if (i !== -1) placeables.splice(i, 1)
-      }
-    }
-
-    function onClearPlaceable({type, idx}) {
-      const idxPlacable = placeables.findIndex(pp => (pp.type === type && pp.idx === idx))
-      if (idxPlacable !== -1) placeables.splice(idxPlacable, 1)
-      const idxPlaced = placed.findIndex(pp => pp.id === type + '_' + idx)
-      if (idxPlaced !== -1) placed.splice(idxPlaced, 1)
-    }
-
-    // --- URL state sync ---
-    let suppressUrlUpdate = false
-    let urlTimer = null
-
-    function buildState() {
-      return {
-        ship: ship.value,
-        r: reactor.value,
-        a1: aux1.value,
-        a2: aux2.value,
-        pl: placeables.map(p => ({ id: p.id, idx: p.idx })),
-        pd: placed.map(p => ({ partId: p.partId, idx: parseInt(String(p.id).split('_')[1]), cells: p.cells }))
-      }
-    }
-
-    function encodeState(obj) {
-      try {
-        const json = JSON.stringify(obj)
-        return btoa(unescape(encodeURIComponent(json)))
-      } catch (e) {
-        try { return btoa(JSON.stringify(obj)) } catch (e2) { return '' }
-      }
-    }
-
-    function decodeState(str) {
-      try {
-        const json = decodeURIComponent(escape(atob(str)))
-        return JSON.parse(json)
-      } catch (e) {
-        try { return JSON.parse(atob(str)) } catch (e2) { return null }
-      }
-    }
-
-    function updateUrlFromState() {
-      if (suppressUrlUpdate) return
-      const enc = encodeState(buildState())
-      const newHash = '#s=' + enc
-      if (location.hash !== newHash) {
-        const url = location.pathname + location.search + newHash
-        history.replaceState(null, '', url)
-      }
-    }
-
-    function applyState(state) {
-      if (!state) return
-      suppressUrlUpdate = true
-      try {
-        // Set ship and power units
-        if (state.ship && availableShips.some(s => s.id === state.ship)) {
-          ship.value = state.ship
-          changeShip()
-        }
-        reactor.value = state.r && reactors.some(r => r.id === state.r) ? state.r : 'none'
-        aux1.value = state.a1 && auxiliaries.some(a => a.id === state.a1) ? state.a1 : 'none'
-        aux2.value = state.a2 && auxiliaries.some(a => a.id === state.a2) ? state.a2 : 'none'
-        applyHoles()
-        // Restore lists
-        placeables.splice(0, placeables.length)
-        if (Array.isArray(state.pl)) {
-          for (const p of state.pl) {
-            const base = parts.find(pp => pp.id === p.id)
-            if (base) placeables.push({ ...base, idx: p.idx })
-          }
-        }
-        placed.splice(0, placed.length)
-        if (Array.isArray(state.pd)) {
-          for (const p of state.pd) {
-            const base = parts.find(pp => pp.id === p.partId)
-            if (base && Array.isArray(p.cells)) {
-              const id = base.type + '_' + p.idx
-              placed.push({ id, partId: base.id, name: base.name, cells: p.cells.map(c => [c[0], c[1]]) })
-            }
-          }
-        }
-        document.dispatchEvent(new CustomEvent('apply-state', {}))
-      } finally {
-        suppressUrlUpdate = false
-      }
-      // Ensure URL matches parsed state (normalizes ordering)
-      updateUrlFromState()
-    }
-
-    function scheduleUrlUpdate() {
-      if (suppressUrlUpdate) return
-      if (urlTimer) clearTimeout(urlTimer)
-      urlTimer = setTimeout(updateUrlFromState, 150)
-    }
-
-    onMounted(() => {
-      // Load initial state from URL if present
-      const m = /^#s=(.+)$/.exec(location.hash || '')
-      if (m && m[1]) {
-        const st = decodeState(m[1])
-        if (st) applyState(st)
-      } else {
-        updateUrlFromState()
-      }
-    })
-
-    watch([ship, reactor, aux1, aux2], scheduleUrlUpdate)
-    watch(placeables, scheduleUrlUpdate, { deep: true })
-    watch(placed, scheduleUrlUpdate, { deep: true })
-
-    // ---- Auto Solve (backtracking) ----
-    function canPlace(part, x, y, rotation, occupied) {
-      for (const [sx, sy] of part.shape) {
-        let tx = sx, ty = sy
-        const r = rotation % 4
-        if (r === 1) { tx = sy; ty = -sx }
-        if (r === 2) { tx = -sx; ty = -sy }
-        if (r === 3) { tx = -sy; ty = sx }
-        const gx = x + tx
-        const gy = y + ty
-        if (gx < 0 || gy < 0 || gx >= 8 || gy >= 8) return false
-        if (grid[gy][gx] === -1) return false
-        if (occupied.has(gx + ',' + gy)) return false
-      }
-      return true
-    }
-
-    function getCells(part, x, y, rotation) {
-      const cells = []
-      for (const [sx, sy] of part.shape) {
-        let tx = sx, ty = sy
-        const r = rotation % 4
-        if (r === 1) { tx = sy; ty = -sx }
-        if (r === 2) { tx = -sx; ty = -sy }
-        if (r === 3) { tx = -sy; ty = sx }
-        cells.push([x + tx, y + ty])
-      }
-      return cells
-    }
-
-    function enumeratePlacements(part, occupied) {
-      const placements = []
-      for (let r = 0; r < 4; r++) {
-        for (let y = 0; y < 8; y++) {
-          for (let x = 0; x < 8; x++) {
-            if (canPlace(part, x, y, r, occupied)) {
-              placements.push({ part, x, y, rotation: r, cells: getCells(part, x, y, r) })
-            }
-          }
-        }
-      }
-      return placements
-    }
-
-    function solveBacktracking(partsToPlace, occupied) {
-      if (partsToPlace.length === 0) return []
-      // Choose the part with fewest placement options (MRV heuristic)
-      let bestIdx = -1
-      let bestOptions = null
-      let bestPlacements = null
-      for (let i = 0; i < partsToPlace.length; i++) {
-        const opts = enumeratePlacements(partsToPlace[i], occupied)
-        if (opts.length === 0) return null
-        if (bestOptions === null || opts.length < bestOptions) {
-          bestOptions = opts.length
-          bestIdx = i
-          bestPlacements = opts
-          if (bestOptions === 1) break
-        }
-      }
-      // Try each placement
-      const nextParts = partsToPlace.slice()
-      const part = nextParts.splice(bestIdx, 1)[0]
-      for (const plc of bestPlacements) {
-        const newly = []
-        for (const c of plc.cells) newly.push(c[0] + ',' + c[1])
-        for (const key of newly) occupied.add(key)
-        const sub = solveBacktracking(nextParts, occupied)
-        if (sub) return [plc, ...sub]
-        for (const key of newly) occupied.delete(key)
-      }
-      return null
-    }
-
     function autoSolve() {
-      // Snapshot current state
-      const remaining = placeables.slice() // parts with unique idx
-      if (remaining.length === 0) {
-        alert('Nothing to place: selection is empty.')
+      const result = solve()
+      if (!result.success) {
+        alert(result.message)
         return
       }
-      const occupied = new Set()
-      for (const pl of placed) {
-        for (const c of pl.cells) occupied.add(c[0] + ',' + c[1])
-      }
-      const solution = solveBacktracking(remaining, occupied)
-      if (!solution) {
-        alert('No complete solution found for the current selection and grid.')
-        return
-      }
-      // Apply solution by placing in order
-      for (const step of solution) {
-        const res = tryPlace({ part: step.part, x: step.x, y: step.y, rotation: step.rotation })
+      // Apply solution
+      for (const step of result.solution) {
+        const res = tryPlace({
+          part: step.part,
+          x: step.x,
+          y: step.y,
+          rotation: step.rotation
+        })
         if (!res || !res.ok) {
-          // This should not happen; abort if it does
-          console.warn('Unexpected placement failure during apply:', step)
+          console.warn('Unexpected placement failure:', step)
           alert('Unexpected error while applying the solution.')
           return
         }
       }
     }
 
+    function onAddPlaceable(part) {
+      const idxPlacable = gridStore.placeables.findIndex(
+          pp => (pp.type === part.type && pp.idx === part.idx)
+      )
+      if (idxPlacable !== -1) gridStore.placeables.splice(idxPlacable, 1)
+
+      const idxPlaced = gridStore.placed.findIndex(
+          pp => pp.id === part.type + '_' + part.idx
+      )
+      if (idxPlaced !== -1) gridStore.placed.splice(idxPlaced, 1)
+
+      if (part) gridStore.addPlaceable(part)
+    }
+
+    function onClearPlaceable({ type, idx }) {
+      const idxPlacable = gridStore.placeables.findIndex(
+          pp => (pp.type === type && pp.idx === idx)
+      )
+      if (idxPlacable !== -1) gridStore.placeables.splice(idxPlacable, 1)
+
+      const idxPlaced = gridStore.placed.findIndex(
+          pp => pp.id === type + '_' + idx
+      )
+      if (idxPlaced !== -1) gridStore.placed.splice(idxPlaced, 1)
+    }
+
+    onMounted(() => {
+      initializeFromUrl()
+      setupWatchers()
+      window.addEventListener("hashchange", (event) => {
+        initializeFromUrl()
+      })
+    })
+
     return {
+      // Ship & Power
+      ship: computed({
+        get: () => shipStore.shipId,
+        set: (val) => {
+          shipStore.setShip(val)
+          checkAll()
+        }
+      }),
+      reactor: computed({
+        get: () => shipStore.reactorId,
+        set: (val) => {
+          shipStore.setReactor(val)
+          applyHoles()
+        }
+      }),
+      aux1: computed({
+        get: () => shipStore.aux1Id,
+        set: (val) => {
+          shipStore.setAux1(val)
+          applyHoles()
+        }
+      }),
+      aux2: computed({
+        get: () => shipStore.aux2Id,
+        set: (val) => {
+          shipStore.setAux2(val)
+          applyHoles()
+        }
+      }),
+      selectedShip: selectedShip,
+      availableShips: shipStore.availableShips,
+      reactors: shipStore.reactors,
+      auxiliaries: shipStore.auxiliaries,
+
+      // Grid
       grid,
-      parts,
-      reactors,
-      auxiliaries,
-      startDrag,
+      placed,
+      placeables,
+
+      // Methods
+      cellSize,
       tryPlace,
       movePlaced,
-      placed,
-      clearGrid,
-      availableShips,
-      ship,
-      selectedShip,
-      reactor,
-      aux1,
-      aux2,
-      changeShip,
+      resetBoard,
+      autoSolve,
       applyHoles,
-      cellSize,
-      placeables,
       onAddPlaceable,
-      onRemovePlaceable,
-      onClearPlaceable,
-      autoSolve
+      onRemovePlaceable: gridStore.removePlaceable,
+      onClearPlaceable
     }
   }
 }

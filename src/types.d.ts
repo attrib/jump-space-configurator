@@ -30,12 +30,13 @@ export interface PlacedPart {
 export interface Ship {
   id: string
   name: string
-  // Number of slots by role (may be omitted for ships that don’t support a role)
-  sensor?: number
-  engine?: number
-  pilotCannon?: number
-  multiTurretSystem?: number
-  specialWeapon?: number
+  // Number of slots by role
+  sensor: number
+  engine: number
+  pilotCannon: number
+  multiTurretSystem: number
+  specialWeapon: number
+  jumpDrive: number
 }
 
 // Power units define buildable/blocked cells by an 8-char wide pattern per row

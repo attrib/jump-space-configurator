@@ -39,6 +39,7 @@
 
 <script>
 import {computed, onMounted, reactive, watchEffect} from 'vue'
+import { usePartsStore } from '../stores/partsStore'
 
 /** @typedef {import('../types').Ship} Ship */
 /** @typedef {import('../types').Grid} Grid */
@@ -48,30 +49,14 @@ import {computed, onMounted, reactive, watchEffect} from 'vue'
 
 export default {
   name: 'SelectionArea',
-  /** @param {{ship: Ship, placed: PlacedPart[], parts: Part[], placeables: Placeable[], grid: Grid}} props */
-  props: {ship: Object, placed: Array, parts: Array, placeables: Array, grid: Array},
+  /** @param {{ship: Ship, placed: PlacedPart[], placeables: Placeable[], grid: Grid}} props */
+  props: {ship: Object, placed: Array, placeables: Array, grid: Array},
   emits: ['add-placeable', 'remove-placeable', 'clear-placeable'],
   setup(props, {emit}) {
-    const typeMap = [
-      { shipKey: 'jumpDrive', label: 'Jump Drives', partType: 'Jump Drives' },
-      { shipKey: 'sensor', label: 'Sensor', partType: 'Sensors' },
-      { shipKey: 'engine', label: 'Engine', partType: 'Engines' },
-      { shipKey: 'pilotCannon', label: 'Pilot Cannon', partType: 'Pilot Cannon' },
-      { shipKey: 'multiTurretSystem', label: 'Multi Turret System', partType: 'Multi Turret Systems' },
-      { shipKey: 'specialWeapon', label: 'Special Weapon', partType: 'Special Weapons' }
-    ]
-
     const selections = reactive({})
-
-    // Build parts grouped by type for quick access
-    const partsByType = computed(() => {
-      const map = {}
-      for (const p of (props.parts || [])) {
-        if (!map[p.type]) map[p.type] = []
-        map[p.type].push(p)
-      }
-      return map
-    })
+    const partStore = usePartsStore()
+    const partsByType = partStore.partsByType
+    const typeMap = partStore.typeMap
 
     const stats = computed(() => {
       const stats = {
@@ -96,14 +81,14 @@ export default {
       document.addEventListener('apply-state', (ev) => {
         for (const placed of props.placed) {
           const [partType, idx] = placed.id.split('_')
-          const cfg = typeMap.find((t) => t.partType === partType)
-          if (!selections[cfg.shipKey]) selections[cfg.shipKey] = []
-          selections[cfg.shipKey][idx] = placed.partId
+          const shipKey = partStore.getShipKeyByPartType(partType)
+          if (!selections[shipKey]) selections[shipKey] = []
+          selections[shipKey][idx] = placed.partId
         }
         for (const placable of props.placeables) {
-          const cfg = typeMap.find((t) => t.partType === placable.type)
-          if (!selections[cfg.shipKey]) selections[cfg.shipKey] = []
-          selections[cfg.shipKey][placable.idx] = placable.id
+          const shipKey = partStore.getShipKeyByPartType(placable.type)
+          if (!selections[shipKey]) selections[shipKey] = []
+          selections[shipKey][placable.idx] = placable.id
         }
       })
     })
@@ -120,7 +105,7 @@ export default {
         // Reset values that no longer exist in options
         for (let i = 0; i < arr.length; i++) {
           const id = arr[i]
-          if (id && !(partsByType.value[cfg.partType] || []).some(p => p.id === id)) {
+          if (id && !(partsByType[cfg.partType] || []).some(p => p.id === id)) {
             arr[i] = ''
           }
         }
@@ -133,7 +118,7 @@ export default {
         emit('clear-placeable', {type: cfg.partType, idx: idx})
         return
       }
-      const part = (partsByType.value[cfg.partType] || []).find(p => p.id === id)
+      const part = (partsByType[cfg.partType] || []).find(p => p.id === id)
       if (!part) {
         emit('clear-placeable', {type: cfg.partType, idx: idx})
         return
@@ -157,8 +142,7 @@ export default {
         if (x > maxX) maxX = x
         if (y > maxY) maxY = y
       }
-      const res = cells.map(([x, y]) => [x - minX, y - minY])
-      return res
+      return cells.map(([x, y]) => [x - minX, y - minY])
     }
 
     function previewSize(part) {
@@ -187,9 +171,9 @@ export default {
 
     function remove(index) {
       const partType = props.placeables[index].type
-      const cfg = typeMap.find((t) => t.partType === partType)
+      const shipKey = partStore.getShipKeyByPartType(partType)
       const partIdx = props.placeables[index].idx
-      selections[cfg.shipKey][partIdx] = ""
+      selections[shipKey][partIdx] = ""
       emit('remove-placeable', index)
     }
 
