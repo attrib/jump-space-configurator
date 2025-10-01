@@ -16,13 +16,13 @@ body {
 }
 
 .app {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     gap: 18px;
-    justify-content: center;
 }
 
 .sidebar {
-    width: 260px
+    justify-self: end;
 }
 
 label {
@@ -69,4 +69,7 @@ footer {
 
 .selection-area, .sidebar {
     text-align: left;
+}
+.selection-area {
+    justify-self: start;
 }
