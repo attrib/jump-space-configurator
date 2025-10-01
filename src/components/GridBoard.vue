@@ -7,6 +7,9 @@
         <rect v-for="x in 8" :key="x"
               :x="(x-1)*cellSize" :y="(y-1)*cellSize" :width="cellSize" :height="cellSize"
               :fill="cellFill(x-1,y-1)" stroke="#111319"/>
+        <circle v-for="x in 8" :key="'c' + x"
+                :r="cellSize/4" :cx="(x-1)*cellSize + 1/2*cellSize" :cy="(y-1)*cellSize + 1/2*cellSize"
+                :fill="cellFillCircle(x-1,y-1)" stroke="#aaaaaa"/>
       </g>
       <g v-for="pl in placed" :key="pl.id">
         <!-- Filled cells without stroke to avoid internal borders -->
@@ -46,9 +49,16 @@ export default {
 
     function cellFill(x, y) {
       const v = props.grid[y][x]
-      if (v === -1) return '#2c3041'
-      if (v === 1) return '#4fa0ec'
-      return '#168a17'
+      if (v === -1) return '#222222'
+      if (v === 1) return '#007ffd'
+      return '#00f607'
+    }
+
+    function cellFillCircle(x, y) {
+      const v = props.grid[y][x]
+      if (v === -1) return '#343434'
+      if (v === 1) return '#1685f4'
+      return '#16f416'
     }
 
     function toGridCoords(clientX, clientY) {
@@ -259,7 +269,7 @@ export default {
       return paths
     }
 
-    return {svgRoot, cellFill, onPointerDown, onPointerMove, onPointerUp, dragging, ghostCells, ghostValid, outlineFromCells}
+    return {svgRoot, cellFill, cellFillCircle, onPointerDown, onPointerMove, onPointerUp, dragging, ghostCells, ghostValid, outlineFromCells}
   }
 }
 </script>

@@ -40,6 +40,12 @@ button {
     touch-action: none;
 }
 
+footer {
+    position: absolute;
+    bottom: 10px;
+    width: calc(100% - 20px);
+}
+
 .legal {
     font-size:13px;
     color:#444;
@@ -47,6 +53,12 @@ button {
     a {
         color:#444;
     }
+}
+
+.github {
+    position: absolute;
+    right: 10px;
+    bottom: 0;
 }
 
 .selection-area, .sidebar {

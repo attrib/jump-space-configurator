@@ -45,7 +45,7 @@
                    @try-place="tryPlace" @move-placed="movePlaced"/>
         <button style="margin-top:12px" @click="clearGrid">Clear Grid</button>
         <div style="margin-top:8px;font-size:13px;color:#444">
-          Notes: This is a minimal client-side prototype. Rotate with R while dragging. Pieces cannot be placed on holes.
+          Notes: This is a minimal client-side prototype. Rotate with R while dragging.
         </div>
       </div>
 
@@ -54,10 +54,18 @@
                        @add-placeable="onAddPlaceable" @remove-placeable="onRemovePlaceable" @clear-placeable="onClearPlaceable"/>
       </div>
     </div>
-    <div class="legal">
-      Images and data are property of Keepsake Games<br>
-      <a href="https://jumpspacegame.com/">Jump Space</a> are registered trademarks of Keepsake Games.
-    </div>
+    <footer>
+      <div class="legal">
+        This project is a non-commercial, fan-made utility.<br>
+        Images and data are property of Keepsake Games. <a href="https://jumpspacegame.com/">Jump Space</a> is a registered trademark of Keepsake Games.<br>
+        No copyright infringement is intended. If you are a rights holder and have concerns, please contact me via GitHub.
+      </div>
+      <div class="github">
+        <a href="https://github.com/attrib/jump-space-configurator" target="_blank">
+          <img src="/GitHub_Logo_White.png" alt="Github" style="width: 100px">
+        </a>
+      </div>
+    </footer>
   </div>
 </template>
 
