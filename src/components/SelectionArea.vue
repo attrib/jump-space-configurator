@@ -57,7 +57,7 @@ export default {
   name: 'SelectionArea',
   /** @param {{ship: Ship, placed: PlacedPart[], placeables: Placeable[], grid: Grid}} props */
   props: {ship: Object, placed: Array, placeables: Array, grid: Array},
-  emits: ['add-placeable', 'remove-placeable', 'clear-placeable'],
+  emits: ['add-placeable', 'remove-placeable', 'clear-placeable', 'change-tier'],
   setup(props, {emit}) {
     const selections = reactive({}) // base ids per slot
     const selectionsTier = reactive({}) // tier per slot
@@ -171,6 +171,16 @@ export default {
         }
       }
 
+      function alignTiers() {
+        for (const i of selectionsTier[cfg.shipKey].keys()) {
+          if (i === idx) continue;
+          if (selections[cfg.shipKey][idx] === selections[cfg.shipKey][i] && selectionsTier[cfg.shipKey][i] !== selectionsTier[cfg.shipKey][idx]) {
+            selectionsTier[cfg.shipKey][i] = selectionsTier[cfg.shipKey][idx]
+            onSelect(cfg, i)
+          }
+        }
+      }
+
       // If this is a pure tier change (same base) and shape didn't change, do not emit
       if (prevConcreteId) {
         const prevBaseId = partStore.getBaseId(prevConcreteId)
@@ -179,7 +189,11 @@ export default {
           const a = (prevShape || []).slice().sort((p1, p2) => (p1[0]-p2[0]) || (p1[1]-p2[1]))
           const b = (newShape || []).slice().sort((p1, p2) => (p1[0]-p2[0]) || (p1[1]-p2[1]))
           const same = a.length === b.length && a.every((c, i) => c[0] === b[i][0] && c[1] === b[i][1])
-          if (same) return
+          if (same) {
+            emit('change-tier', {idx, type: cfg.partType, part})
+            alignTiers()
+            return
+          }
         }
       }
 
@@ -188,6 +202,7 @@ export default {
       // decorate name with tier for clarity if multiple tiers
       if (tiers.length && tier) clonedPart.name = `${clonedPart.name.replace(/\s*T\d+$/i,'')} ${tier}`
       emit('add-placeable', clonedPart)
+      alignTiers()
     }
 
     const cell = 12 // preview cell size

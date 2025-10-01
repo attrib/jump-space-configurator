@@ -68,7 +68,8 @@
 
       <div class="selection-area">
         <SelectionArea :ship="selectedShip" :placed="placed" :placeables="placeables" :grid="grid"
-                       @add-placeable="onAddPlaceable" @remove-placeable="onRemovePlaceable" @clear-placeable="onClearPlaceable"/>
+                       @add-placeable="onAddPlaceable" @remove-placeable="onRemovePlaceable"
+                       @clear-placeable="onClearPlaceable" @change-tier="onChangeTier"/>
       </div>
     </div>
     <footer>
@@ -158,6 +159,22 @@ export default {
           pp => pp.id === type + '_' + idx
       )
       if (idxPlaced !== -1) gridStore.placed.splice(idxPlaced, 1)
+    }
+
+    function onChangeTier({ idx, type, part }) {
+      const idxPlacable = gridStore.placeables.findIndex(
+          pp => (pp.type === type && pp.idx === idx)
+      )
+      if (idxPlacable !== -1) {
+        gridStore.placeables[idxPlacable] = Object.assign(gridStore.placeables[idxPlacable], part)
+      }
+
+      const idxPlaced = gridStore.placed.findIndex(
+          pp => pp.id === type + '_' + idx
+      )
+      if (idxPlaced !== -1) {
+        gridStore.placed[idxPlaced].partId = part.id
+      }
     }
 
     function resetAll() {
@@ -272,6 +289,7 @@ export default {
       applyHoles,
       onAddPlaceable,
       onRemovePlaceable: gridStore.removePlaceable,
+      onChangeTier,
       onClearPlaceable,
       resetAll
     }
