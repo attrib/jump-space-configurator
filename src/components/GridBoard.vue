@@ -35,16 +35,25 @@
 <script>
 import {onMounted, ref} from 'vue'
 
+/** @typedef {import('../types').Grid} Grid */
+/** @typedef {import('../types').PlacedPart} PlacedPart */
+/** @typedef {import('../types').Placeable} Placeable */
+/** @typedef {import('../types').Cell} Cell */
+
 export default {
   name: 'GridBoard',
+  /** @param {{grid: Grid, placed: PlacedPart[], cellSize: number}} props */
   props: {grid: Array, placed: Array, cellSize: Number},
   emits: ['try-place', 'move-placed'],
   setup(props, {emit}) {
     const svgRoot = ref(null)
+    /** @type {Placeable|null} */
     let currentPart = null
     let rotation = 0
     const dragging = ref(false)
+    /** @type {import('vue').Ref<Cell[]>} */
     const ghostCells = ref([])
+    /** @type {import('vue').Ref<boolean>} */
     const ghostValid = ref(false)
 
     function cellFill(x, y) {

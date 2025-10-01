@@ -78,19 +78,37 @@ import SelectionArea from './components/SelectionArea.vue'
 import {reactive, ref, watch, onMounted} from 'vue'
 import data from './data/parts.json'
 
+/** @typedef {import('./types').Grid} Grid */
+/** @typedef {import('./types').Part} Part */
+/** @typedef {import('./types').Placeable} Placeable */
+/** @typedef {import('./types').PlacedPart} PlacedPart */
+/** @typedef {import('./types').Ship} Ship */
+/** @typedef {import('./types').Reactor} Reactor */
+/** @typedef {import('./types').Auxiliary} Auxiliary */
+/** @typedef {import('./types').TryPlacePayload} TryPlacePayload */
+
 export default {
   components: {GridBoard, SelectionArea},
   setup() {
+    /** @type {Grid} */
     const grid = reactive(Array.from({length: 8}, () => Array(8).fill(0)))
+    /** @type {PlacedPart[]} */
     const placed = reactive([])
+    /** @type {Placeable[]} */
     const placeables = reactive([])
+    /** @type {Ship['id']} */
     const ship = ref('catamaran-t0')
+    /** @type {Ship} */
     const selectedShip  = reactive({})
+    /** @type {Reactor['id'] | 'none'} */
     const reactor = ref('none')
+    /** @type {Auxiliary['id'] | 'none'} */
     const aux1 = ref('none')
+    /** @type {Auxiliary['id'] | 'none'} */
     const aux2 = ref('none')
     const cellSize = 48
 
+    /** @type {Part[]} */
     const parts = data.parts
 
     function parseShape(part) {
@@ -109,10 +127,13 @@ export default {
       parseShape(part)
     }
 
+    /** @type {Reactor[]} */
     const reactors = data.reactors
 
+    /** @type {Auxiliary[]} */
     const auxiliaries = data.auxiliaries
 
+    /** @type {Ship[]} */
     const availableShips = data.ships
 
     function changeShip() {
@@ -147,6 +168,12 @@ export default {
       placed.splice(0, placed.length)
     }
 
+    /**
+     * @param {(Reactor[]|Auxiliary[])} list
+     * @param {string} selected
+     * @param {number} offsetY
+     * @param {Grid} newGrid
+     */
     function applyHolesFor(list, selected, offsetY, newGrid) {
       const item = list.find(i => i.id === selected)
       if (!item) return
@@ -172,6 +199,10 @@ export default {
       document.dispatchEvent(new CustomEvent('jumpspace-drag-start', {detail: {part}, bubbles: true}))
     }
 
+    /**
+     * @param {TryPlacePayload} payload
+     * @returns {{ok: boolean, id?: string}}
+     */
     function tryPlace(payload) {
       const {part, x, y, rotation} = payload
       const coords = []

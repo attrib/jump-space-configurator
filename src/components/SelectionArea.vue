@@ -40,8 +40,15 @@
 <script>
 import {computed, onMounted, reactive, watchEffect} from 'vue'
 
+/** @typedef {import('../types').Ship} Ship */
+/** @typedef {import('../types').Grid} Grid */
+/** @typedef {import('../types').Part} Part */
+/** @typedef {import('../types').Placeable} Placeable */
+/** @typedef {import('../types').PlacedPart} PlacedPart */
+
 export default {
   name: 'SelectionArea',
+  /** @param {{ship: Ship, placed: PlacedPart[], parts: Part[], placeables: Placeable[], grid: Grid}} props */
   props: {ship: Object, placed: Array, parts: Array, placeables: Array, grid: Array},
   emits: ['add-placeable', 'remove-placeable', 'clear-placeable'],
   setup(props, {emit}) {
