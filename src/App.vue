@@ -5,9 +5,13 @@
       <div class="sidebar">
         <h3 style="margin-top:12px">Select Ship</h3>
         <div>
-          <label>Ship
+          <label>
+            Ship
             <select v-model="ship">
               <option v-for="s in availableShips" :value=s.id>{{ s.name }}</option>
+            </select>
+            <select v-if="ship" v-model="shipTier">
+              <option v-for="t in shipTiers" :value="t">{{ t }}</option>
             </select>
           </label>
         </div>
@@ -17,7 +21,10 @@
           <label>Reactor:
             <select v-model="reactor">
               <option value="none">none</option>
-              <option v-for="r in reactors" :value=r.id>{{ r.name }}</option>
+              <option v-for="r in reactors" :value="r.id">{{ r.name }}</option>
+            </select>
+            <select v-if="reactor !== 'none'" v-model="reactorTier">
+              <option v-for="t in reactorTiers" :value="t">{{ t }}</option>
             </select>
           </label>
         </div>
@@ -25,7 +32,10 @@
           <label>Aux 1:
             <select v-model="aux1">
               <option value="none">none</option>
-              <option v-for="a in auxiliaries" :value=a.id>{{ a.name }}</option>
+              <option v-for="a in auxiliaries" :value="a.id">{{ a.name }}</option>
+            </select>
+            <select v-if="aux1 !== 'none'" v-model="aux1Tier">
+              <option v-for="t in aux1Tiers" :value="t">{{ t }}</option>
             </select>
           </label>
         </div>
@@ -33,7 +43,10 @@
           <label>Aux 2:
             <select v-model="aux2">
               <option value="none">none</option>
-              <option v-for="a in auxiliaries" :value=a.id>{{ a.name }}</option>
+              <option v-for="a in auxiliaries" :value="a.id">{{ a.name }}</option>
+            </select>
+            <select v-if="aux2 !== 'none'" v-model="aux2Tier">
+              <option v-for="t in aux2Tiers" :value="t">{{ t }}</option>
             </select>
           </label>
         </div>
@@ -94,6 +107,7 @@ export default {
 
     const { selectedShip } = storeToRefs(shipStore)
     const { grid, placed, placeables } = storeToRefs(gridStore)
+    const { reactorTiers, aux1Tiers, aux2Tiers, shipTiers } = storeToRefs(shipStore)
 
     const cellSize = 48
 
@@ -162,10 +176,24 @@ export default {
           checkAll()
         }
       }),
+      shipTier: computed({
+        get: () => shipStore.shipTier,
+        set: (val) => {
+          shipStore.setShipTier(val)
+          checkAll()
+        }
+      }),
       reactor: computed({
         get: () => shipStore.reactorId,
         set: (val) => {
           shipStore.setReactor(val)
+          applyHoles()
+        }
+      }),
+      reactorTier: computed({
+        get: () => shipStore.reactorTier,
+        set: (val) => {
+          shipStore.setReactorTier(val)
           applyHoles()
         }
       }),
@@ -176,6 +204,13 @@ export default {
           applyHoles()
         }
       }),
+      aux1Tier: computed({
+        get: () => shipStore.aux1Tier,
+        set: (val) => {
+          shipStore.setAux1Tier(val)
+          applyHoles()
+        }
+      }),
       aux2: computed({
         get: () => shipStore.aux2Id,
         set: (val) => {
@@ -183,10 +218,21 @@ export default {
           applyHoles()
         }
       }),
+      aux2Tier: computed({
+        get: () => shipStore.aux2Tier,
+        set: (val) => {
+          shipStore.setAux2Tier(val)
+          applyHoles()
+        }
+      }),
       selectedShip: selectedShip,
       availableShips: shipStore.availableShips,
       reactors: shipStore.reactors,
       auxiliaries: shipStore.auxiliaries,
+      shipTiers,
+      reactorTiers,
+      aux1Tiers,
+      aux2Tiers,
 
       // Grid
       grid,

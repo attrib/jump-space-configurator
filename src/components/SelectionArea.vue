@@ -2,17 +2,19 @@
   <div>
     <div>Nodes total {{ stats.total }} / needed {{ stats.needed }} / open {{ stats.open }}</div>
     <div style="margin-bottom:8px;font-weight:bold">Select parts by type</div>
-    <div v-for="cfg in typeMap" :key="cfg.shipKey" style="margin:6px 0">
-      <div style="font-size:13px;color:#ccc;margin-bottom:4px">{{ cfg.label }}</div>
-      <div style="display:flex; gap:6px; flex-wrap:wrap">
-        <select v-for="(n, idx) in (ship && ship[cfg.shipKey] ? ship[cfg.shipKey] : 0)" :key="cfg.shipKey+'-'+idx"
-                v-model="selections[cfg.shipKey][idx]" @change="onSelect(cfg, idx)"
-                style="min-width:180px">
-          <option value="" v-if="cfg.shipKey !== 'jumpDrive'">None</option>
-          <option v-for="p in partsByType[cfg.partType]" :value="p.id">{{ p.name }}</option>
-        </select>
+    <template v-for="cfg in typeMap">
+      <div :key="cfg.shipKey" style="margin:6px 0" v-if="(ship && ship[cfg.shipKey] ? ship[cfg.shipKey] : 0) > 0">
+        <div style="font-size:13px;color:#ccc;margin-bottom:4px">{{ cfg.label }}</div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap">
+          <select v-for="(n, idx) in (ship && ship[cfg.shipKey] ? ship[cfg.shipKey] : 0)" :key="cfg.shipKey+'-'+idx"
+                  v-model="selections[cfg.shipKey][idx]" @change="onSelect(cfg, idx)"
+                  style="min-width:180px">
+            <option value="" v-if="cfg.shipKey !== 'jumpDrive'">None</option>
+            <option v-for="p in partsByType[cfg.partType]" :value="p.id">{{ p.name }}</option>
+          </select>
+        </div>
       </div>
-    </div>
+    </template>
 
     <div style="margin-top:12px;font-weight:bold">Placeables</div>
     <div v-if="placeables && placeables.length === 0" style="font-size:13px;color:#777">No parts to add to ship.</div>

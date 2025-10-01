@@ -27,10 +27,8 @@ export interface PlacedPart {
   cells: Cell[]
 }
 
-export interface Ship {
-  id: string
-  name: string
-  // Number of slots by role
+export interface ShipTier {
+  // Number of slots by role for a specific tier
   sensor: number
   engine: number
   pilotCannon: number
@@ -39,18 +37,29 @@ export interface Ship {
   jumpDrive: number
 }
 
-// Power units define buildable/blocked cells by an 8-char wide pattern per row
-export interface Reactor {
+export interface Ship {
   id: string
   name: string
-  // Each string is 8 characters, containing letters like 'U' (usable) and 'P' (power?)
+  tiers: Record<TierKey, ShipTier>
+}
+
+// Power units define buildable/blocked cells by an 8-char wide pattern per row
+export type TierKey = string // e.g., "T1", "T2", "T3"
+
+export interface TieredShape {
   shape: string[]
 }
 
+export interface Reactor {
+  id: string // base id, e.g., "split_reactor"
+  name: string // base name, e.g., "Split Reactor"
+  tiers: Record<TierKey, TieredShape>
+}
+
 export interface Auxiliary {
-  id: string
-  name: string
-  shape: string[]
+  id: string // base id, e.g., "bio_fission_generator"
+  name: string // base name without tier suffix
+  tiers: Record<TierKey, TieredShape>
 }
 
 export interface DataShape {

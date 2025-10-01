@@ -16,18 +16,21 @@ export function useGridManager() {
     applyHolesFor(
       shipStore.reactors,
       shipStore.reactorId,
+      shipStore.reactorTier,
       0,
       newGrid
     )
     applyHolesFor(
       shipStore.auxiliaries,
       shipStore.aux1Id,
+      shipStore.aux1Tier,
       4,
       newGrid
     )
     applyHolesFor(
       shipStore.auxiliaries,
       shipStore.aux2Id,
+      shipStore.aux2Tier,
       6,
       newGrid
     )
@@ -98,11 +101,13 @@ export function useGridManager() {
   /**
    * Apply holes from a specific reactor or auxiliary
    */
-  function applyHolesFor(list, selected, offsetY, newGrid) {
-    const item = list.find(i => i.id === selected)
+  function applyHolesFor(list, selectedId, selectedTier, offsetY, newGrid) {
+    const item = list.find(i => i.id === selectedId)
     if (!item) return
+    const tier = selectedTier && item.tiers ? item.tiers[selectedTier] : undefined
+    if (!tier || !tier.shape) return
 
-    for (const [y, line] of item.shape.entries()) {
+    for (const [y, line] of tier.shape.entries()) {
       for (let x = 0; x < 8; x++) {
         const ch = line[x]
         if (ch === 'U') newGrid[y + offsetY][x] = 0

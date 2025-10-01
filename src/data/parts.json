@@ -445,231 +445,173 @@
   ],
   "reactors": [
     {
-      "id": "split_reactor_t1",
-      "name": "Split Reactor T1",
-      "shape": [
-        "UU    UU",
-        "UUU  UUU",
-        "UUU  UUU",
-        "UUU  UUU"
-      ]
-    },
-     {
-      "id": "split_reactor_t2",
-      "name": "Split Reactor T2",
-      "shape": [
-        "UU    UU",
-        "UUU  UUU",
-        "PUU  UUP",
-        "PUU  UUP"
-      ]
-    },
-     {
-      "id": "split_reactor_t3",
-      "name": "Split Reactor T3",
-      "shape": [
-        "UU    UU",
-        "UUU  UUU",
-        "PPU  UPP",
-        "PPU  UPP"
-      ]
+      "id": "split_reactor",
+      "name": "Split Reactor",
+      "tiers": {
+        "T1": { "shape": [
+          "UU    UU",
+          "UUU  UUU",
+          "UUU  UUU",
+          "UUU  UUU"
+        ]},
+        "T2": { "shape": [
+          "UU    UU",
+          "UUU  UUU",
+          "PUU  UUP",
+          "PUU  UUP"
+        ]},
+        "T3": { "shape": [
+          "UU    UU",
+          "UUU  UUU",
+          "PPU  UPP",
+          "PPU  UPP"
+        ]}
+      }
     },
     {
-      "id": "solid_state_reactor_t1",
-      "name": "Solid State Reactor T1",
-      "shape": [
-        "  UUUU  ",
-        "  UUUU  ",
-        "  PPPP  ",
-        "  PPPP  "
-      ]
-    },
-     {
-      "id": "solid_state_reactor_t2",
-      "name": "Solid State Reactor T2",
-      "shape": [
-        "  UUUU  ",
-        "  PPPP  ",
-        "  PPPP  ",
-        "  PPPP  "
-      ]
-    },
-     {
-      "id": "solid_state_reactor_t3",
-      "name": "Solid State Reactor T3",
-      "shape": [
-        "  PPPP  ",
-        "  PPPP  ",
-        "  PPPP  ",
-        "  PPPP  "
-      ]
+      "id": "solid_state_reactor",
+      "name": "Solid State Reactor",
+      "tiers": {
+        "T1": { "shape": [
+          "  UUUU  ",
+          "  UUUU  ",
+          "  PPPP  ",
+          "  PPPP  "
+        ]},
+        "T2": { "shape": [
+          "  UUUU  ",
+          "  PPPP  ",
+          "  PPPP  ",
+          "  PPPP  "
+        ]},
+        "T3": { "shape": [
+          "  PPPP  ",
+          "  PPPP  ",
+          "  PPPP  ",
+          "  PPPP  "
+        ]}
+      }
     },
     {
-      "id": "materia_scatter_reactor_t1",
-      "name": "Materia Scatter Reactor T1",
-      "shape": [
-        "UUUUUUUU",
-        " U UU U ",
-        "UUUUUUUU",
-        "P P  P P"
-      ]
+      "id": "materia_scatter_reactor",
+      "name": "Materia Scatter Reactor",
+      "tiers": {
+        "T1": { "shape": [
+          "UUUUUUUU",
+          " U UU U ",
+          "UUUUUUUU",
+          "P P  P P"
+        ]},
+        "T2": { "shape": [
+          "UUUUUUUU",
+          " U UU U ",
+          "UPPUUPPU",
+          "P P  P P"
+        ]},
+        "T3": { "shape": [
+          "UUUUUUUU",
+          " P UU P ",
+          "PPPPPPPP",
+          "P P  P P"
+        ]}
+      }
     },
     {
-      "id": "materia_scatter_reactor_t2",
-      "name": "Materia Scatter Reactor T2",
-      "shape": [
-        "UUUUUUUU",
-        " U UU U ",
-        "UPPUUPPU",
-        "P P  P P"
-      ]
-    },
-    {
-      "id": "materia_scatter_reactor_t3",
-      "name": "Materia Scatter Reactor T3",
-      "shape": [
-        "UUUUUUUU",
-        " P UU P ",
-        "PPPPPPPP",
-        "P P  P P"
-      ]
-    },
-    {
-      "id": "null_wave_reactor_t1",
-      "name": "Null Wave Reactor T1",
-      "shape": [
-        "UU    UU",
-        "UUU  UUU",
-        " PPUUPP ",
-        "  PUUP  "
-      ]
-    },
-   {
-      "id": "null_wave_reactor_t2",
-      "name": "Null Wave Reactor T2",
-      "shape": [
-        "PU    UP",
-        "PUU  UUP",
-        " PPUUPP ",
-        "  PUUP  "
-      ]
-    },
- {
-      "id": "null_wave_reactor_t3",
-      "name": "Null Wave Reactor T3",
-      "shape": [
-        "PP    PP",
-        "PPU  UPP",
-        " PPUUPP ",
-        "  PUUP  "
-      ]
+      "id": "null_wave_reactor",
+      "name": "Null Wave Reactor",
+      "tiers": {
+        "T1": { "shape": [
+          "UU    UU",
+          "UUU  UUU",
+          " PPUUPP ",
+          "  PUUP  "
+        ]},
+        "T2": { "shape": [
+          "PU    UP",
+          "PUU  UUP",
+          " PPUUPP ",
+          "  PUUP  "
+        ]},
+        "T3": { "shape": [
+          "PP    PP",
+          "PPU  UPP",
+          " PPUUPP ",
+          "  PUUP  "
+        ]}
+      }
     }
   ],
   "auxiliaries": [
     {
-      "id": "bio_fission_generator_t1",
-      "name": "Bio Fission Generator T1",
-      "shape": [
-        "  UUUU  ",
-        "  U  U  "
-      ]
-    },
-     {
-      "id": "bio_fission_generator_t2",
-      "name": "Bio Fission Generator T2",
-      "shape": [
-        " UUUUUU ",
-        " P    P "
-      ]
-    },
-     {
-      "id": "bio_fission_generator_t3",
-      "name": "Bio Fission Generator T3",
-      "shape": [
-        "PUUUUUUP",
-        "P      P"
-      ]
+      "id": "bio_fission_generator",
+      "name": "Bio Fission Generator",
+      "tiers": {
+        "T1": { "shape": [
+          "  UUUU  ",
+          "  U  U  "
+        ]},
+        "T2": { "shape": [
+          " UUUUUU ",
+          " P    P "
+        ]},
+        "T3": { "shape": [
+          "PUUUUUUP",
+          "P      P"
+        ]}
+      }
     },
     {
-      "id": "materia_shift_generator_t1",
-      "name": "Materia Shift Generator T1",
-      "shape": [
-        " UU  UU ",
-        " UU  UU "
-      ]
+      "id": "materia_shift_generator",
+      "name": "Materia Shift Generator",
+      "tiers": {
+        "T1": { "shape": [
+          " UU  UU ",
+          " UU  UU "
+        ]},
+        "T2": { "shape": [
+          " UP  PU ",
+          " PU  UP "
+        ]},
+        "T3": { "shape": [
+          " UP  PU ",
+          " PP  PP "
+        ]}
+      }
     },
     {
-      "id": "materia_shift_generator_t2",
-      "name": "Materia Shift Generator T2",
-      "shape": [
-        " UP  PU ",
-        " PU  UP "
-      ]
-    },
-    {
-      "id": "materia_shift_generator_t3",
-      "name": "Materia Shift Generator T3",
-      "shape": [
-        " UP  PU ",
-        " PP  PP "
-      ]
-    },
-    {
-      "id": "null_tension_generator_t1",
-      "name": "Null Tension Generator T1",
-      "shape": [
-        "  UUUU  ",
-        "  UUUU  "
-      ]
-    },
-     {
-      "id": "null_tension_generator_t2",
-      "name": "Null Tension Generator T2",
-      "shape": [
-        "  UUUU  ",
-        "  PUUP  "
-      ]
-    },
-     {
-      "id": "null_tension_generator_t3",
-      "name": "Null Tension Generator T3",
-      "shape": [
-        "  UUUU  ",
-        "  PPPP  "
-      ]
+      "id": "null_tension_generator",
+      "name": "Null Tension Generator",
+      "tiers": {
+        "T1": { "shape": [
+          "  UUUU  ",
+          "  UUUU  "
+        ]},
+        "T2": { "shape": [
+          "  UUUU  ",
+          "  PUUP  "
+        ]},
+        "T3": { "shape": [
+          "  UUUU  ",
+          "  PPPP  "
+        ]}
+      }
     }
   ],
   "ships": [
     {
-      "id": "catamaran-t0",
-      "name": "C-3 Catamaran T0",
-      "sensor": 1,
-      "engine": 1,
-      "pilotCannon": 1,
-      "multiTurretSystem": 1,
-      "specialWeapon": 1,
-      "jumpDrive": 1
+      "id": "catamaran",
+      "name": "C-3 Catamaran",
+      "tiers": {
+        "T0": { "sensor": 1, "engine": 1, "pilotCannon": 1, "multiTurretSystem": 1, "specialWeapon": 2, "jumpDrive": 1 },
+        "T1": { "sensor": 1, "engine": 1, "pilotCannon": 1, "multiTurretSystem": 1, "specialWeapon": 2, "jumpDrive": 1 }
+      }
     },
     {
-      "id": "catamaran-t1",
-      "name": "C-3 Catamaran T1",
-      "sensor": 1,
-      "engine": 1,
-      "pilotCannon": 1,
-      "multiTurretSystem": 1,
-      "specialWeapon": 2,
-      "jumpDrive": 1
-    },
-    {
-      "id": "dart-t0",
+      "id": "dart",
       "name": "DT-4 Dart",
-      "sensor": 1,
-      "engine": 1,
-      "pilotCannon": 2,
-      "multiTurretSystem": 0,
-      "specialWeapon": 1,
-      "jumpDrive": 1
+      "tiers": {
+        "T0": { "sensor": 1, "engine": 1, "pilotCannon": 2, "multiTurretSystem": 0, "specialWeapon": 1, "jumpDrive": 1 }
+      }
     }
-
   ]
 }

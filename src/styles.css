@@ -25,6 +25,12 @@ body {
     width: 260px
 }
 
+label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .grid-area {
     #background: #f7f7fbcc;
     padding: 12px;
