@@ -76,6 +76,16 @@ export default {
 
     onMounted(() => {
       document.addEventListener('apply-state', (ev) => {
+        // Clear current selections for all slots, then rehydrate from placed/placeables
+        for (const cfg of typeMap) {
+          const count = props.ship && props.ship[cfg.shipKey] ? props.ship[cfg.shipKey] : 0
+          if (!selections[cfg.shipKey]) selections[cfg.shipKey] = []
+          if (!selectionsTier[cfg.shipKey]) selectionsTier[cfg.shipKey] = []
+          for (let i = 0; i < count; i++) {
+            selections[cfg.shipKey][i] = ''
+            selectionsTier[cfg.shipKey][i] = ''
+          }
+        }
         for (const placed of props.placed) {
           const [partType, idx] = placed.id.split('_')
           const shipKey = partStore.getShipKeyByPartType(partType)
@@ -133,7 +143,10 @@ export default {
       }
       let tier = selectionsTier[cfg.shipKey][idx]
       const tiers = partStore.tiersForBase(baseId) || []
-      if (!tier && tiers.length) tier = tiers[0]
+      if (!tier && tiers.length) {
+        tier = tiers[0]
+        selectionsTier[cfg.shipKey][idx] = tier
+      }
       const part = partStore.getConcretePart(baseId, tier)
       if (!part) {
         emit('clear-placeable', {type: cfg.partType, idx})

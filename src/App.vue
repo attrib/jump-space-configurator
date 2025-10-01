@@ -57,6 +57,7 @@
         <GridBoard ref="board" :grid="grid" :placed="placed" :cellSize="cellSize"
                    @try-place="tryPlace" @move-placed="movePlaced"/>
         <div style="margin-top:12px; display:flex; gap:8px; justify-content: center;">
+          <button @click="resetAll">Reset All</button>
           <button @click="resetBoard">Clear Grid</button>
           <button @click="autoSolve" :disabled="placeables.length === 0">Auto Solve</button>
         </div>
@@ -159,6 +160,29 @@ export default {
       if (idxPlaced !== -1) gridStore.placed.splice(idxPlaced, 1)
     }
 
+    function resetAll() {
+      // Reset ship and power selections to defaults
+      shipStore.setShip('catamaran')
+      shipStore.setShipTier('T0')
+      shipStore.setReactor('none')
+      shipStore.setReactorTier('T1')
+      shipStore.setAux1('none')
+      shipStore.setAux1Tier('T1')
+      shipStore.setAux2('none')
+      shipStore.setAux2Tier('T1')
+
+      // Clear all placed and placeables
+      if (gridStore.placed.length) gridStore.placed.splice(0, gridStore.placed.length)
+      if (gridStore.placeables.length) gridStore.placeables.splice(0, gridStore.placeables.length)
+
+      // Recompute grid holes and validate
+      applyHoles()
+      checkAll()
+
+      // Notify selection area to clear its local selections state
+      document.dispatchEvent(new CustomEvent('apply-state', {}))
+    }
+
     onMounted(() => {
       initializeFromUrl()
       setupWatchers()
@@ -248,7 +272,8 @@ export default {
       applyHoles,
       onAddPlaceable,
       onRemovePlaceable: gridStore.removePlaceable,
-      onClearPlaceable
+      onClearPlaceable,
+      resetAll
     }
   }
 }
