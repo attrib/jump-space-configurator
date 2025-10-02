@@ -4,51 +4,50 @@
     <div class="app">
       <div class="sidebar">
         <h3 style="margin-top:12px">Select Ship</h3>
-        <div>
-          <label>
+        <div class="power-row">
+          <label for="shipSel">
             Ship
-            <select v-model="ship">
-              <option v-for="s in availableShips" :value=s.id>{{ s.name }}</option>
-            </select>
-            <select v-if="ship" v-model="shipTier">
-              <option v-for="t in shipTiers" :value="t">{{ t }}</option>
-            </select>
           </label>
+          <select id="shipSel" v-model="ship">
+            <option v-for="s in availableShips" :value=s.id>{{ s.name }}</option>
+          </select>
+          <select v-if="ship" v-model="shipTier">
+            <option v-for="t in shipTiers" :value="t">{{ t }}</option>
+          </select>
         </div>
 
         <h3 style="margin-top:12px">Choose Reactor & Aux. Generator</h3>
-        <div>
-          <label>Reactor:
-            <select v-model="reactor">
+        <div class="power-grid">
+          <div class="power-row">
+            <label for="reactorSel" class="lbl">Reactor</label>
+            <select id="reactorSel" v-model="reactor">
               <option value="none">none</option>
               <option v-for="r in reactors" :value="r.id">{{ r.name }}</option>
             </select>
-            <select v-if="reactor !== 'none'" v-model="reactorTier">
+            <select v-if="reactor !== 'none'" v-model="reactorTier" class="tier-select">
               <option v-for="t in reactorTiers" :value="t">{{ t }}</option>
             </select>
-          </label>
-        </div>
-        <div style="margin-top:8px">
-          <label>Aux 1:
-            <select v-model="aux1">
+          </div>
+          <div class="power-row">
+            <label for="aux1Sel" class="lbl">Aux B</label>
+            <select id="aux1Sel" v-model="aux1">
               <option value="none">none</option>
               <option v-for="a in auxiliaries" :value="a.id">{{ a.name }}</option>
             </select>
-            <select v-if="aux1 !== 'none'" v-model="aux1Tier">
+            <select v-if="aux1 !== 'none'" v-model="aux1Tier" class="tier-select">
               <option v-for="t in aux1Tiers" :value="t">{{ t }}</option>
             </select>
-          </label>
-        </div>
-        <div style="margin-top:8px">
-          <label>Aux 2:
-            <select v-model="aux2">
+          </div>
+          <div class="power-row">
+            <label for="aux2Sel" class="lbl">Aux A</label>
+            <select id="aux2Sel" v-model="aux2">
               <option value="none">none</option>
               <option v-for="a in auxiliaries" :value="a.id">{{ a.name }}</option>
             </select>
-            <select v-if="aux2 !== 'none'" v-model="aux2Tier">
+            <select v-if="aux2 !== 'none'" v-model="aux2Tier" class="tier-select">
               <option v-for="t in aux2Tiers" :value="t">{{ t }}</option>
             </select>
-          </label>
+          </div>
         </div>
 
       </div>
@@ -297,3 +296,14 @@ export default {
   }
 }
 </script>
+
+
+<style scoped>
+/* Align power selection rows into columns */
+.power-grid { display: grid; gap: 8px; }
+.power-row { display: grid; grid-template-columns: 64px 1fr 50px; align-items: center; gap: 8px; }
+.power-row .lbl { font-weight: 600; }
+.power-row select { width: 100%; }
+/* Small tier select width and right alignment for consistency */
+.power-row .tier-select { width: 100%; }
+</style>
