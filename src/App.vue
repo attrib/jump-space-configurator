@@ -54,12 +54,13 @@
       </div>
 
       <div class="grid-area">
+
         <GridBoard ref="board" :grid="grid" :placed="placed" :cellSize="cellSize"
                    @try-place="tryPlace" @move-placed="movePlaced"/>
+        <button @click="autoSolve" :disabled="placeables.length === 0">Auto Solve</button>
         <div style="margin-top:12px; display:flex; gap:8px; justify-content: center;">
-          <button @click="resetAll">Reset All</button>
           <button @click="resetBoard">Clear Grid</button>
-          <button @click="autoSolve" :disabled="placeables.length === 0">Auto Solve</button>
+          <button @click="resetAll">Reset All</button>
         </div>
         <div style="margin-top:8px;font-size:13px;color:#444">
           Notes: This is a minimal client-side prototype. Rotate with R while dragging.
